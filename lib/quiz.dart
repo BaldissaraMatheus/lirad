@@ -5,7 +5,7 @@ class Quiz extends StatefulWidget {
   final String reference;
   final List<String> answers;
   final int rightAnswerIndex;
-  int selectedAnswer;
+  int selectedAnswerIndex;
 
   Quiz({this.question, this.answers, this.rightAnswerIndex, this.reference});
   
@@ -14,6 +14,8 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
+  final dataKey = new GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,6 +30,7 @@ class _QuizState extends State<Quiz> {
               Text(widget.question, style: TextStyle(fontSize: 16,),),
               Container(margin: EdgeInsets.only(top: 12, bottom: 12), child: Text(widget.reference, style: TextStyle(fontSize: 12,),),),
               ...widget.answers.map((answer) => this._buildRaisedButton(answer, widget.answers.indexOf(answer))),
+              Container(margin: EdgeInsets.only(top: 12), child: this._getSendButton()),
               // Expanded(
               //   child: Align(
               //     alignment: FractionalOffset.bottomCenter,
@@ -43,12 +46,30 @@ class _QuizState extends State<Quiz> {
       )
     );
   }
+  RaisedButton _getSendButton() {
+    var maxWidthChild = SizedBox(width: double.infinity, child: Text('Enviar', textAlign: TextAlign.center,),);
+    var color = Colors.blue;
+    return RaisedButton(
+      key: dataKey,
+      child: maxWidthChild,
+      onPressed: () => setState(() => print('Resposta enviada: ${widget.answers[widget.selectedAnswerIndex]}, resposta correta: ${widget.answers[widget.rightAnswerIndex]}')), 
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: color)
+      ),
+      color: color,
+      textColor: Colors.white,
+    );
+  }
   RaisedButton _buildRaisedButton(String text, int index) {
     var maxWidthChild = SizedBox(width: double.infinity, child: Text(text, textAlign: TextAlign.center,),);
-    var color = index != null && index == widget.selectedAnswer ? Colors.blue : Colors.deepPurple[400];
+    var color = index != null && index == widget.selectedAnswerIndex ? Colors.blue : Colors.deepPurple[400];
     return RaisedButton(
       child: maxWidthChild,
-      onPressed: () => setState(() => widget.selectedAnswer = index), 
+      onPressed: () => {
+        Scrollable.ensureVisible(dataKey.currentContext),
+        setState(() => widget.selectedAnswerIndex = index)
+      },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
         side: BorderSide(color: color)
