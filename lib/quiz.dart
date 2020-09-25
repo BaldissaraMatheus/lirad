@@ -47,12 +47,17 @@ class _QuizState extends State<Quiz> {
     );
   }
   RaisedButton _getSendButton() {
-    var maxWidthChild = SizedBox(width: double.infinity, child: Text('Enviar', textAlign: TextAlign.center,),);
+    var maxWidthChild = this._getMaxWidthChild('Enviar');
     var color = Colors.blue;
     return RaisedButton(
       key: dataKey,
       child: maxWidthChild,
-      onPressed: () => setState(() => print('Resposta enviada: ${widget.answers[widget.selectedAnswerIndex]}, resposta correta: ${widget.answers[widget.rightAnswerIndex]}')), 
+      onPressed: () => { 
+        print(
+          'Resposta enviada: ${widget.answers[widget.selectedAnswerIndex]},'
+          + 'resposta correta: ${widget.answers[widget.rightAnswerIndex]}'
+        ),
+      },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
         side: BorderSide(color: color)
@@ -62,7 +67,7 @@ class _QuizState extends State<Quiz> {
     );
   }
   RaisedButton _buildRaisedButton(String text, int index) {
-    var maxWidthChild = SizedBox(width: double.infinity, child: Text(text, textAlign: TextAlign.center,),);
+    var maxWidthChild = this._getMaxWidthChild(text);
     var color = index != null && index == widget.selectedAnswerIndex ? Colors.blue : Colors.deepPurple[400];
     return RaisedButton(
       child: maxWidthChild,
@@ -78,13 +83,8 @@ class _QuizState extends State<Quiz> {
       textColor: Colors.white,
     );
   }
-  void _checkAnswer() {
-    var index = 0;
-    if (index == widget.rightAnswerIndex) {
-      print('acertou');
-    } else {
-      print('errou');
-    }
+  SizedBox _getMaxWidthChild(String text) {
+    return SizedBox(width: double.infinity, child: Text(text, textAlign: TextAlign.center,),);
   }
 }
 
