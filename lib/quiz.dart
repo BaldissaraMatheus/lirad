@@ -48,22 +48,35 @@ class _QuizState extends State<Quiz> {
   }
   RaisedButton _getSendButton() {
     var maxWidthChild = this._getMaxWidthChild('Enviar');
-    var color = Colors.blue;
+    var isAnyAnswerSelected = widget.selectedAnswerIndex != null;
+    var selectedAnswerOrZero = isAnyAnswerSelected ? widget.selectedAnswerIndex : 0;
+    var selectedAnswer = widget.answers[selectedAnswerOrZero];
+    var rightAnswer = widget.answers[widget.rightAnswerIndex];
+    var isSelectedAnswerCorrect = selectedAnswer == rightAnswer ? 'Resposta correta!' : 'Resposta errada!';
+    var color = isAnyAnswerSelected ? Colors.blue : Colors.grey[600];
+
     return RaisedButton(
       key: dataKey,
       child: maxWidthChild,
-      onPressed: () => { 
-        print(
-          'Resposta enviada: ${widget.answers[widget.selectedAnswerIndex]},'
-          + 'resposta correta: ${widget.answers[widget.rightAnswerIndex]}'
-        ),
-      },
+      color: color,
+      textColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
         side: BorderSide(color: color)
       ),
-      color: color,
-      textColor: Colors.white,
+      onPressed: () => isAnyAnswerSelected
+        ? showDialog(
+          context: this.context,
+          barrierDismissible: true,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text(isSelectedAnswerCorrect),
+            content: Text('Resposta correta: ' + rightAnswer),
+            actions: [
+              FlatButton(child: null, onPressed: null,)
+            ],
+          ),
+        )
+        : null,
     );
   }
   RaisedButton _buildRaisedButton(String text, int index) {
@@ -71,6 +84,8 @@ class _QuizState extends State<Quiz> {
     var color = index != null && index == widget.selectedAnswerIndex ? Colors.blue : Colors.deepPurple[400];
     return RaisedButton(
       child: maxWidthChild,
+      color: color,
+      textColor: Colors.white,
       onPressed: () => {
         Scrollable.ensureVisible(dataKey.currentContext),
         setState(() => widget.selectedAnswerIndex = index)
@@ -79,8 +94,6 @@ class _QuizState extends State<Quiz> {
         borderRadius: BorderRadius.circular(18),
         side: BorderSide(color: color)
       ),
-      color: color,
-      textColor: Colors.white,
     );
   }
   SizedBox _getMaxWidthChild(String text) {
