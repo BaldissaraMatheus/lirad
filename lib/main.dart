@@ -18,19 +18,10 @@ class MyAppState extends State<MyApp> {
     + 'flora e fauna da região sulamericana, via seus habitantes como se fossem mendigos sentados sobre um saco de ouro,'
     + 'referindo-se a suas incomensuráveis riquezas naturais não exploradas. De alguma maneira,'
     + 'o cientista ratificou nosso papel de exportadores de natureza no que seria o mundo depois da colonização ibérica:'
-    // + 'flora e fauna da região sulamericana, via seus habitantes como se fossem mendigos sentados sobre um saco de ouro,'
-    // + 'referindo-se a suas incomensuráveis riquezas naturais não exploradas. De alguma maneira,'
-    // + 'o cientista ratificou nosso papel de exportadores de natureza no que seria o mundo depois da colonização ibérica:'
-    // + 'flora e fauna da região sulamericana, via seus habitantes como se fossem mendigos sentados sobre um saco de ouro,'
-    // + 'referindo-se a suas incomensuráveis riquezas naturais não exploradas. De alguma maneira,'
-    // + 'o cientista ratificou nosso papel de exportadores de natureza no que seria o mundo depois da colonização ibérica:'
-    // + 'flora e fauna da região sulamericana, via seus habitantes como se fossem mendigos sentados sobre um saco de ouro,'
-    // + 'referindo-se a suas incomensuráveis riquezas naturais não exploradas. De alguma maneira,'
-    // + 'o cientista ratificou nosso papel de exportadores de natureza no que seria o mundo depois da colonização ibérica:'
     + 'enxergou-nos como territórios condenados a aproveitar os recursos naturais existentes.\n'
-    + 'Nesse texto, o filósofo cristão Agostinho de Hipona sustenta que a punição divina tem como fundamento o(a)';
-  var reference = 'ACOSTA, A. Bem viver: uma oportunidade para imaginar outros mundos. São Paulo: Elefante, 2016 (adaptado).';
-  // var reference = '';
+    + 'ACOSTA, A. _Bem viver_: uma oportunidade para imaginar outros mundos. São Paulo: Elefante, 2016 (adaptado).\n'
+    + 'A relação entre o ser humano e a natureza ressaltada no texto refletia a permanência da seguinte corrente filosófica:';
+
   var answers = [
     'Relativismo Cognitivo',
     'Materialismo Dialético',
@@ -50,7 +41,7 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(home: Scaffold(
       appBar: AppBar(
        ),
-      body: Quiz(question: questao, reference: reference, answers: answers, rightAnswerIndex: 2,)
+      body: Quiz(question: questao, answers: answers, rightAnswerIndex: 2,)
     ),);
   }
 }
