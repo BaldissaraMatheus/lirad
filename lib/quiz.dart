@@ -106,7 +106,6 @@ class _QuizState extends State<Quiz> {
     var italicPortion = questionList.where((element) => isEven = !isEven).toList();
     isEven = false;
     var notItalicPortion = questionList.where((element) => isEven = !isEven).toList(); 
-    // italicPortion.forEach((element) => print(element));
     var newList = new List<TextSpan>();
     for (int i = 0; i < notItalicPortion.length - 1; i++) {
       newList.add(new TextSpan(text: notItalicPortion[i]));
