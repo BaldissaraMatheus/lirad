@@ -17,33 +17,38 @@ class _QuizState extends State<Quiz> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      margin: EdgeInsets.all(20),
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Align(
-            alignment: Alignment.center,
-            child: Column(children: <Widget>[
-              this._buildQuestionText(widget.question),
-              // Text(widget.question, style: TextStyle(fontSize: 16,),),
-              ...widget.answers.map((answer) => this._buildRaisedButton(answer, widget.answers.indexOf(answer))),
-              Container(margin: EdgeInsets.only(top: 12), child: this._getSendButton()),
-              // Container(margin: EdgeInsets.only(top: 12, bottom: 12), child: Text(widget.reference, style: TextStyle(fontSize: 12,),),),
-              // Expanded(
-              //   child: Align(
-              //     alignment: FractionalOffset.bottomCenter,
-              //     child: MaterialButton(
-              //       onPressed: () => {},
-              //       child: this._buildRaisedButton('Enviar')
-              //     ),
-              //   ),
-              // ),
-            ],),
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Quiz"),
+          ),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.all(20),
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(children: <Widget>[
+                this._buildQuestionText(widget.question),
+                // Text(widget.question, style: TextStyle(fontSize: 16,),),
+                ...widget.answers.map((answer) => this._buildRaisedButton(answer, widget.answers.indexOf(answer))),
+                Container(margin: EdgeInsets.only(top: 12), child: this._getSendButton()),
+                // Container(margin: EdgeInsets.only(top: 12, bottom: 12), child: Text(widget.reference, style: TextStyle(fontSize: 12,),),),
+                // Expanded(
+                //   child: Align(
+                //     alignment: FractionalOffset.bottomCenter,
+                //     child: MaterialButton(
+                //       onPressed: () => {},
+                //       child: this._buildRaisedButton('Enviar')
+                //     ),
+                //   ),
+                // ),
+              ],),
+            )
           )
         )
-      )
+      ),
     );
   }
   RaisedButton _getSendButton() {
