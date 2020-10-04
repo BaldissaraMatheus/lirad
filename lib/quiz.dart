@@ -22,6 +22,7 @@ class _QuizState extends State<Quiz> {
         width: double.infinity,
         height: double.infinity,
         child: Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
           appBar: AppBar(
             title: Text("Quiz"),
           ),
@@ -58,13 +59,19 @@ class _QuizState extends State<Quiz> {
     var selectedAnswer = widget.answers[selectedAnswerOrZero];
     var rightAnswer = widget.answers[widget.rightAnswerIndex];
     var isSelectedAnswerCorrect = selectedAnswer == rightAnswer ? 'Resposta correta!' : 'Resposta errada!';
-    var color = isAnyAnswerSelected ? Colors.blue : Colors.grey[600];
+    var color = !isAnyAnswerSelected
+      ? Theme.of(context).primaryColor
+      : Theme.of(context).accentColor;
+    var textColor = !isAnyAnswerSelected
+      ? Theme.of(context).primaryTextTheme.bodyText1.color
+      : Theme.of(context).accentTextTheme.bodyText1.color;
 
     return RaisedButton(
       key: dataKey,
       child: maxWidthChild,
       color: color,
-      textColor: Colors.white,
+      // textColor: Theme.of(context).backgroundColor, // ??
+      textColor: textColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
         side: BorderSide(color: color)
@@ -86,11 +93,17 @@ class _QuizState extends State<Quiz> {
   }
   RaisedButton _buildRaisedButton(String text, int index) {
     var maxWidthChild = this._getMaxWidthChild(text);
-    var color = index != null && index == this.selectedAnswerIndex ? Colors.blue : Colors.deepPurple[400];
+    var isThisAnswerSelected = index != null && index == this.selectedAnswerIndex;
+    var color = !isThisAnswerSelected
+      ? Theme.of(context).primaryColor
+      : Theme.of(context).accentColor;
+    var textColor = !isThisAnswerSelected
+      ? Theme.of(context).primaryTextTheme.bodyText1.color
+      : Theme.of(context).accentTextTheme.bodyText1.color;
     return RaisedButton(
       child: maxWidthChild,
       color: color,
-      textColor: Colors.white,
+      textColor: textColor,
       onPressed: () => {
         Scrollable.ensureVisible(dataKey.currentContext),
         setState(() => this.selectedAnswerIndex = index)

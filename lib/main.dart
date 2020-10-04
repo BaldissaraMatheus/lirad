@@ -26,17 +26,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        backgroundColor: Color(0xffF0F0F0),
+        primaryColor: Color(0xff14213D),
+        accentColor: Color(0xffF1CD43),
+        primaryTextTheme: TextTheme(
+          bodyText1: TextStyle(),
+          bodyText2: TextStyle()
+        ).apply(
+          bodyColor: Color(0xffF0F0F0),
+          displayColor: Color(0xffF0F0F0)
+        ),
+        accentTextTheme: TextTheme(
+          bodyText1: TextStyle(),
+          bodyText2: TextStyle()
+        ).apply(
+          bodyColor: Color(0xff171717),
+          displayColor: Color(0xff171717)
+        ),
+      ),
       initialRoute: '/',
       routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) => Menu(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
         '/quiz': (context) => Quiz(question: questao, answers: answers, rightAnswerIndex: 2,),
       },
-      
-      //home: Scaffold(
-        //body: Quiz(question: questao, answers: answers, rightAnswerIndex: 2,)
-      //),
     );
   }
 }
@@ -46,7 +59,7 @@ class Menu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Menu'),
+        title: Text('Menu', style: TextStyle(color: Theme.of(context).primaryTextTheme.headline6.color),),
       ),
       body: Center(
         child: RaisedButton(
