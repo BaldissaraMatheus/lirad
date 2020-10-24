@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-import './quiz.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import './screens/quiz.dart';
+import './config/palette.dart';
 
 const questao =
   'Dizem que Humboldt, naturalista do século XIX, maravilhado pela geografia,'
@@ -28,22 +29,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        backgroundColor: Color(0xffF0F0F0),
-        primaryColor: Color(0xff14213D),
-        accentColor: Color(0xffF1CD43),
+        backgroundColor: Palette.white,
+        primaryColor: Palette.darkBlue,
+        accentColor: Palette.yellow,
         primaryTextTheme: TextTheme(
           bodyText1: TextStyle(),
           bodyText2: TextStyle()
         ).apply(
-          bodyColor: Color(0xffF0F0F0),
-          displayColor: Color(0xffF0F0F0)
+          bodyColor: Palette.black,
+          displayColor: Palette.white
         ),
         accentTextTheme: TextTheme(
           bodyText1: TextStyle(),
           bodyText2: TextStyle()
         ).apply(
-          bodyColor: Color(0xff171717),
-          displayColor: Color(0xff171717)
+          bodyColor: Palette.black,
+          displayColor: Palette.black
         ),
       ),
       initialRoute: '/',
