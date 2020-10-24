@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "154846865193",
+    "firebase_url": "https://lirad-3049e.firebaseio.com",
+    "project_id": "lirad-3049e",
+    "storage_bucket": "lirad-3049e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154846865193:android:5b846549d2cff498e9b938",
+        "android_client_info": {
+          "package_name": "com.lirad.liradapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154846865193-p12s8sugi64bl637j2sc08u27k9u68v1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxjEL-YgCxrCBNgxZlW7Fl_5wxWjF32EQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154846865193-p12s8sugi64bl637j2sc08u27k9u68v1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

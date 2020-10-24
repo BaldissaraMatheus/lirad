@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'quiz.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+import './quiz.dart';
 
 const questao =
   'Dizem que Humboldt, naturalista do século XIX, maravilhado pela geografia,'
