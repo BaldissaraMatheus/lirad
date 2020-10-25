@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/types/quiz.dart';
 
-class Quiz extends StatefulWidget {
-  final String question;
-  final List<String> answers;
-  final int rightAnswerIndex;
+class QuizScreen extends StatefulWidget {
+  final Quiz quiz;
 
-  Quiz({this.question, this.answers, this.rightAnswerIndex});
+  QuizScreen({ this.quiz });
   
   @override
-  _QuizState createState() => new _QuizState();
+  _QuizScreenState createState() => new _QuizScreenState();
 }
 
-class _QuizState extends State<Quiz> {
+class _QuizScreenState extends State<QuizScreen> {
   final dataKey = new GlobalKey();
   int selectedAnswerIndex;
 
@@ -24,16 +23,16 @@ class _QuizState extends State<Quiz> {
         child: Scaffold(
           backgroundColor: Theme.of(context).backgroundColor,
           appBar: AppBar(
-            title: Text("Quiz"),
+            title: Text(widget.quiz.title),
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(20),
             child: Align(
               alignment: Alignment.center,
               child: Column(children: <Widget>[
-                this._buildQuestionText(widget.question),
+                this._buildQuestionText(widget.quiz.question),
                 // Text(widget.question, style: TextStyle(fontSize: 16,),),
-                ...widget.answers.map((answer) => this._buildRaisedButton(answer, widget.answers.indexOf(answer))),
+                ...widget.quiz.options.map((option) => this._buildRaisedButton(option, widget.quiz.options.indexOf(option))),
                 Container(margin: EdgeInsets.only(top: 12), child: this._getSendButton()),
                 // Container(margin: EdgeInsets.only(top: 12, bottom: 12), child: Text(widget.reference, style: TextStyle(fontSize: 12,),),),
                 // Expanded(
@@ -56,8 +55,8 @@ class _QuizState extends State<Quiz> {
     var maxWidthChild = this._getMaxWidthChild('Enviar');
     var isAnyAnswerSelected = this.selectedAnswerIndex != null;
     var selectedAnswerOrZero = isAnyAnswerSelected ? this.selectedAnswerIndex : 0;
-    var selectedAnswer = widget.answers[selectedAnswerOrZero];
-    var rightAnswer = widget.answers[widget.rightAnswerIndex];
+    var selectedAnswer = widget.quiz.options[selectedAnswerOrZero];
+    var rightAnswer = widget.quiz.options[widget.quiz.answer.index];
     var isSelectedAnswerCorrect = selectedAnswer == rightAnswer ? 'Resposta correta!' : 'Resposta errada!';
     var color = !isAnyAnswerSelected
       ? Theme.of(context).primaryColor
@@ -82,7 +81,7 @@ class _QuizState extends State<Quiz> {
           barrierDismissible: true,
           builder: (BuildContext context) => AlertDialog(
             title: Text(isSelectedAnswerCorrect),
-            content: Text('Resposta correta: ' + rightAnswer),
+            content: Text('Resposta correta: ' + rightAnswer + '\n \n' + widget.quiz.answer.description),
             actions: [
               FlatButton(child: null, onPressed: null,)
             ],
@@ -118,7 +117,8 @@ class _QuizState extends State<Quiz> {
     return SizedBox(width: double.infinity, child: Text(text, textAlign: TextAlign.center,),);
   }
   RichText _buildQuestionText(String question) {
-    var questionList = question.split('_');
+    var questionWithLineBreaks = question.replaceAll("\\n", "\n");
+    var questionList = questionWithLineBreaks.split('_');
     // https://stackoverflow.com/a/622001
     var isEven = true;
     var italicPortion = questionList.where((element) => isEven = !isEven).toList();
@@ -133,7 +133,7 @@ class _QuizState extends State<Quiz> {
 
     var text = new RichText(
       text: TextSpan(
-        style: TextStyle(fontSize: 16, color: Colors.black),
+        style: TextStyle(fontSize: 16, color: Colors.black, ),
         children: newList
       )
     );

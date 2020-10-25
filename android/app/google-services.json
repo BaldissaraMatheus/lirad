@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "154846865193-emr153l3oo004917i8h61g9qdch06sgo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lirad.liradapp",
+            "certificate_hash": "8f327926464e15ad6c5e1305b6ea33a66b77b782"
+          }
+        },
+        {
           "client_id": "154846865193-p12s8sugi64bl637j2sc08u27k9u68v1.apps.googleusercontent.com",
           "client_type": 3
         }
