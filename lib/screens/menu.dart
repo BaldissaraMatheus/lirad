@@ -11,8 +11,7 @@ class Menu extends StatelessWidget {
         child: RaisedButton(
           child: Text('Abrir lista de questões'),
           onPressed: () {
-          Navigator.of(context).pushNamed('/quizes');
-            // Navigate to the second screen when tapped.
+            Navigator.of(context).pushNamed('/quizes');
           },
         ),
       ),
