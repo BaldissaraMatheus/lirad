@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/types/quiz.dart';
+import 'package:frontend/models/quiz.dart';
 
 class QuizScreen extends StatefulWidget {
   final Quiz quiz;

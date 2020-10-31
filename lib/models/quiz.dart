@@ -9,6 +9,7 @@ class Quiz {
   
   Quiz({ this.title, this.question, this.options, this.answer });
 
+  // TODO usar padrao do video.dart
   Quiz.fromQueryDocumentSnapshot(QueryDocumentSnapshot queryDocumentSnapshot) {
     var data = queryDocumentSnapshot.data();
     this.title = data['title'];
