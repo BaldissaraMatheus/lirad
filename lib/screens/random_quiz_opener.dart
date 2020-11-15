@@ -40,7 +40,7 @@ class _RandomQuizOpenerState extends State<RandomQuizOpener> {
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('quizes').get();
     var length = qn.docs.length;
     var index = new Random().nextInt(length);
-    var quiz = new Quiz.fromQueryDocumentSnapshot(qn.docs[index]);
+    var quiz = new Quiz.fromMap(qn.docs[index].data());
     Navigator.of(context).popAndPushNamed('/quizes/quiz', arguments: quiz);
   }
 }

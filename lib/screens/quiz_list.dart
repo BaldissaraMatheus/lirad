@@ -45,7 +45,7 @@ class _QuisListState extends State<QuizList> {
   Future<List<Quiz>> getQuizes() async {
     await Firebase.initializeApp();
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('quizes').get();
-    return qn.docs.map((doc) => Quiz.fromQueryDocumentSnapshot(doc)).toList();
+    return qn.docs.map((doc) => Quiz.fromMap(doc.data())).toList();
   }
 
   _createButton(Quiz quiz) {

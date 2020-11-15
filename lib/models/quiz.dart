@@ -1,20 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import './answer.dart';
+import './option.dart';
 
 class Quiz {
-  String title;
-  String question;
-  List<String> options;
-  Answer answer;
+  final String title;
+  final String question;
+  final List<Option> options;
+  final int answer;
   
-  Quiz({ this.title, this.question, this.options, this.answer });
+  Quiz(this.title, this.question, this.options, this.answer);
 
-  // TODO usar padrao do video.dart
-  Quiz.fromQueryDocumentSnapshot(QueryDocumentSnapshot queryDocumentSnapshot) {
-    var data = queryDocumentSnapshot.data();
-    this.title = data['title'];
-    this.question = data['question'];
-    this.options = data['options'].cast<String>();
-    this.answer = new Answer(description: data['answer']['description'], index: data['answer']['index']);
+  factory Quiz.fromMap(Map<String, dynamic> snippet) {
+    return Quiz(
+      snippet['title'],
+      snippet['question'],
+      snippet['options'].map((option) => Option(option['description'], option['explanation'])).toList().cast<Option>(),
+      snippet['answer']
+    );
   }
 }

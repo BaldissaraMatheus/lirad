@@ -12,7 +12,7 @@ class QuizScreen extends StatefulWidget {
 
 class _QuizScreenState extends State<QuizScreen> {
   final dataKey = new GlobalKey();
-  int selectedAnswerIndex;
+  int selectedOptionIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _QuizScreenState extends State<QuizScreen> {
               child: Column(children: <Widget>[
                 this._buildQuestionText(widget.quiz.question),
                 // Text(widget.question, style: TextStyle(fontSize: 16,),),
-                ...widget.quiz.options.map((option) => this._buildRaisedButton(option, widget.quiz.options.indexOf(option))),
+                ...widget.quiz.options.map((option) => this._buildRaisedButton(option.description, widget.quiz.options.indexOf(option))),
                 Container(margin: EdgeInsets.only(top: 12), child: this._getSendButton()),
                 // Container(margin: EdgeInsets.only(top: 12, bottom: 12), child: Text(widget.reference, style: TextStyle(fontSize: 12,),),),
                 // Expanded(
@@ -53,15 +53,15 @@ class _QuizScreenState extends State<QuizScreen> {
   }
   RaisedButton _getSendButton() {
     var maxWidthChild = this._getMaxWidthChild('Enviar');
-    var isAnyAnswerSelected = this.selectedAnswerIndex != null;
-    var selectedAnswerOrZero = isAnyAnswerSelected ? this.selectedAnswerIndex : 0;
-    var selectedAnswer = widget.quiz.options[selectedAnswerOrZero];
-    var rightAnswer = widget.quiz.options[widget.quiz.answer.index];
-    var isSelectedAnswerCorrect = selectedAnswer == rightAnswer ? 'Resposta correta!' : 'Resposta errada!';
-    var color = !isAnyAnswerSelected
+    var isAnyOptionSelected = this.selectedOptionIndex != null;
+    var selectedOptionOrZero = isAnyOptionSelected ? this.selectedOptionIndex : 0;
+    var selectedOption = widget.quiz.options[selectedOptionOrZero];
+    var rightAnswer = widget.quiz.options[widget.quiz.answer];
+    var isSelectedAnswerCorrect = selectedOption == rightAnswer ? 'Resposta correta!' : 'Resposta errada!';
+    var color = !isAnyOptionSelected
       ? Theme.of(context).primaryColor
       : Theme.of(context).accentColor;
-    var textColor = !isAnyAnswerSelected
+    var textColor = !isAnyOptionSelected
       ? Theme.of(context).primaryTextTheme.bodyText1.color
       : Theme.of(context).accentTextTheme.bodyText1.color;
 
@@ -75,13 +75,13 @@ class _QuizScreenState extends State<QuizScreen> {
         borderRadius: BorderRadius.circular(18),
         side: BorderSide(color: color)
       ),
-      onPressed: () => isAnyAnswerSelected
+      onPressed: () => isAnyOptionSelected
         ? showDialog(
           context: this.context,
           barrierDismissible: true,
           builder: (BuildContext context) => AlertDialog(
             title: Text(isSelectedAnswerCorrect),
-            content: Text('Resposta correta: ' + rightAnswer + '\n \n' + widget.quiz.answer.description),
+            content: Text('Resposta correta: ' + rightAnswer.description + '\n \n' + selectedOption.explanation),
             actions: [
               FlatButton(child: null, onPressed: null,)
             ],
@@ -92,11 +92,11 @@ class _QuizScreenState extends State<QuizScreen> {
   }
   RaisedButton _buildRaisedButton(String text, int index) {
     var maxWidthChild = this._getMaxWidthChild(text);
-    var isThisAnswerSelected = index != null && index == this.selectedAnswerIndex;
-    var color = !isThisAnswerSelected
+    var isThisOptionSelected = index != null && index == this.selectedOptionIndex;
+    var color = !isThisOptionSelected
       ? Theme.of(context).primaryColor
       : Theme.of(context).accentColor;
-    var textColor = !isThisAnswerSelected
+    var textColor = !isThisOptionSelected
       ? Theme.of(context).primaryTextTheme.bodyText1.color
       : Theme.of(context).accentTextTheme.bodyText1.color;
     return RaisedButton(
@@ -105,7 +105,7 @@ class _QuizScreenState extends State<QuizScreen> {
       textColor: textColor,
       onPressed: () => {
         Scrollable.ensureVisible(dataKey.currentContext),
-        setState(() => this.selectedAnswerIndex = index)
+        setState(() => this.selectedOptionIndex = index)
       },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
