@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/random_quiz_opener.dart';
 import 'package:frontend/screens/video_list.dart';
 
 import './screens/menu.dart';
@@ -12,6 +13,7 @@ class RouterGenerator {
     Map<String, Widget> routes = {
       '/': Menu(),
       '/quizes': QuizList(),
+      '/quizes/random': RandomQuizOpener(),
       '/quizes/quiz': QuizScreen(quiz: args),
       '/videos': VideoListScreen()
     };
