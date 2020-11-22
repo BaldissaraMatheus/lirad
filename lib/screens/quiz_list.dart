@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/quiz.dart';
+import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
 
 class QuizList extends StatefulWidget {
   @override
@@ -56,7 +57,7 @@ class _QuisListState extends State<QuizList> {
       color: bgColor,
       textColor: textColor,
       onPressed: () => {
-        Navigator.of(context).pushNamed('/quizes/quiz', arguments: quiz)
+        // Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments([quiz], 0))
       },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),

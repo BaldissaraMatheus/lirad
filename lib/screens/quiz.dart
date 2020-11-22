@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/quiz.dart';
+import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
 
 class QuizScreen extends StatefulWidget {
-  final Quiz quiz;
+  List<Quiz> quizes;
+  int index;
 
-  QuizScreen({ this.quiz });
+  QuizScreen(QuizScreenArguments args) {
+    this.quizes = args.quizes;
+    this.index = args.index;
+  }
   
   @override
   _QuizScreenState createState() => new _QuizScreenState();
@@ -23,16 +28,17 @@ class _QuizScreenState extends State<QuizScreen> {
         child: Scaffold(
           backgroundColor: Theme.of(context).backgroundColor,
           appBar: AppBar(
-            title: Text(widget.quiz.title),
+            title: Text(widget.quizes[widget.index].title),
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(20),
             child: Align(
               alignment: Alignment.center,
               child: Column(children: <Widget>[
-                this._buildQuestionText(widget.quiz.question),
+                this._buildQuestionText(widget.quizes[widget.index].question),
                 // Text(widget.question, style: TextStyle(fontSize: 16,),),
-                ...widget.quiz.options.map((option) => this._buildRaisedButton(option.description, widget.quiz.options.indexOf(option))),
+                ...widget.quizes[widget.index].options.map((option) => 
+                  this._buildRaisedButton(option.description, widget.quizes[widget.index].options.indexOf(option))),
                 Container(margin: EdgeInsets.only(top: 12), child: this._getSendButton()),
                 // Container(margin: EdgeInsets.only(top: 12, bottom: 12), child: Text(widget.reference, style: TextStyle(fontSize: 12,),),),
                 // Expanded(
@@ -55,8 +61,8 @@ class _QuizScreenState extends State<QuizScreen> {
     var maxWidthChild = this._getMaxWidthChild('Enviar');
     var isAnyOptionSelected = this.selectedOptionIndex != null;
     var selectedOptionOrZero = isAnyOptionSelected ? this.selectedOptionIndex : 0;
-    var selectedOption = widget.quiz.options[selectedOptionOrZero];
-    var rightAnswer = widget.quiz.options[widget.quiz.answer];
+    var selectedOption = widget.quizes[widget.index].options[selectedOptionOrZero];
+    var rightAnswer = widget.quizes[widget.index].options[widget.quizes[widget.index].answer];
     var isSelectedAnswerCorrect = selectedOption == rightAnswer ? 'Resposta correta!' : 'Resposta errada!';
     var color = !isAnyOptionSelected
       ? Theme.of(context).primaryColor

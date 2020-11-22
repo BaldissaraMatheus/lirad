@@ -11,12 +11,13 @@ import 'screens/quiz.dart';
 class RouterGenerator {
   static Route<dynamic> generate(RouteSettings settings) {
     final args = settings.arguments;
+    print(args);
     Map<String, Widget> routes = {
       '/': Menu(),
       '/login': LoginScreen(),
       '/quizes': QuizList(),
       '/quizes/random': RandomQuizOpener(),
-      '/quizes/quiz': QuizScreen(quiz: args),
+      '/quizes/quiz': args != null ? QuizScreen(args) : Menu(),
       '/videos': VideoListScreen()
     };
     Widget screen = routes[settings.name];

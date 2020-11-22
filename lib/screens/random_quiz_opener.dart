@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/quiz.dart';
+import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
 
 class RandomQuizOpener extends StatefulWidget {
   @override
@@ -37,9 +38,10 @@ class _RandomQuizOpenerState extends State<RandomQuizOpener> {
 
   void navigateToRandomQuiz() async {
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('quizes').get();
-    var length = qn.docs.length;
-    var index = new Random().nextInt(length);
-    var quiz = new Quiz.fromMap(qn.docs[index].data());
-    Navigator.of(context).popAndPushNamed('/quizes/quiz', arguments: quiz);
+    var quizes = qn.docs
+      .map((doc) => new Quiz.fromMap(doc.data()))
+      .toList()
+      ..shuffle();
+    Navigator.of(context).popAndPushNamed('/quizes/quiz', arguments: new QuizScreenArguments(quizes, 0));
   }
 }
