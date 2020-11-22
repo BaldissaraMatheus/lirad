@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/login.dart';
 import 'package:frontend/screens/random_quiz_opener.dart';
 import 'package:frontend/screens/video_list.dart';
 
@@ -12,6 +13,7 @@ class RouterGenerator {
     final args = settings.arguments;
     Map<String, Widget> routes = {
       '/': Menu(),
+      '/login': LoginScreen(),
       '/quizes': QuizList(),
       '/quizes/random': RandomQuizOpener(),
       '/quizes/quiz': QuizScreen(quiz: args),
@@ -19,5 +21,14 @@ class RouterGenerator {
     };
     Widget screen = routes[settings.name];
     return MaterialPageRoute(builder: (_) => screen);
+  }
+}
+
+class AuthenticationWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
+    );
   }
 }

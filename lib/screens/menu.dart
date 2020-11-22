@@ -10,6 +10,12 @@ class Menu extends StatelessWidget {
       body: Center(
         child: ListView(children: [
           RaisedButton(
+            child: Text('Login'),
+            onPressed: () {
+              Navigator.of(context).pushNamed('/login');
+            },
+          ),
+          RaisedButton(
             child: Text('Abrir questão aleatória'),
             onPressed: () {
               Navigator.of(context).pushNamed('/quizes/random');

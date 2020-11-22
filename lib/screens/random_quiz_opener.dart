@@ -36,7 +36,6 @@ class _RandomQuizOpenerState extends State<RandomQuizOpener> {
   }
 
   void navigateToRandomQuiz() async {
-    await Firebase.initializeApp();
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('quizes').get();
     var length = qn.docs.length;
     var index = new Random().nextInt(length);

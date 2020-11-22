@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import './config/palette.dart';
@@ -26,6 +27,7 @@ final theme = ThemeData(
 void main(List<String> args) async {
   // https://stackoverflow.com/questions/57689492/flutter-unhandled-exception-servicesbinding-defaultbinarymessenger-was-accesse
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   FirebaseMessaging fm = FirebaseMessaging();
   var token = await fm.getToken();
   print(token);
