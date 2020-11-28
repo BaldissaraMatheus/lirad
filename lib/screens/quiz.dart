@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/quiz.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
 
+// ignore: must_be_immutable
 class QuizScreen extends StatefulWidget {
   List<Quiz> quizes;
   int index;
@@ -52,7 +53,25 @@ class _QuizScreenState extends State<QuizScreen> {
                 // ),
               ],),
             )
-          )
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            unselectedItemColor: Theme.of(context).primaryColor.withOpacity(this._isQuizIndexLast() ? 0.5 : 1),
+            selectedItemColor: Theme.of(context).primaryColor.withOpacity(this._isQuizIndexFirst() ? 0.5 : 1),
+            unselectedFontSize: 14,
+            selectedFontSize: 14,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.west),
+                label: 'Questão Anterior',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.east),
+                label: 'Próxima Questão',
+              )
+            ],
+           onTap: _onBottomNavigationBarItemTapped, 
+          ),
         )
       ),
     );
@@ -75,7 +94,6 @@ class _QuizScreenState extends State<QuizScreen> {
       key: dataKey,
       child: maxWidthChild,
       color: color,
-      // textColor: Theme.of(context).backgroundColor, // ??
       textColor: textColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
@@ -145,5 +163,27 @@ class _QuizScreenState extends State<QuizScreen> {
     );
     // print(questionList);
     return text;
+  }
+  void _onBottomNavigationBarItemTapped(int value) {
+    this.resetState();
+    if (value == 0 && this._isQuizIndexFirst()) {
+      return;
+    }
+    if (value == 1 && this._isQuizIndexLast()) {
+      return;
+    }
+    var operand = value == 0 ? -1 : 1;
+    setState(() {
+      widget.index += operand;
+    });
+  }
+  bool _isQuizIndexFirst() {
+    return widget.index == 0;
+  }
+  bool _isQuizIndexLast() {
+    return widget.index == widget.quizes.length - 1;
+  }
+  void resetState() {
+    this.selectedOptionIndex = null;
   }
 }
