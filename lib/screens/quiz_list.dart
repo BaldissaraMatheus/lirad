@@ -69,7 +69,7 @@ class _QuisListState extends State<QuizList> {
       color: bgColor,
       textColor: textColor,
       onPressed: () => {
-        // Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(this.quizList, this.quizList.indexOf(quiz)))
+        Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(this.quizList, this.quizList.indexOf(quiz)))
       },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
