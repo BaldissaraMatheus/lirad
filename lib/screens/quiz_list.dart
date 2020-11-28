@@ -13,6 +13,8 @@ class QuizList extends StatefulWidget {
 
 class _QuisListState extends State<QuizList> {
 
+  List<Quiz> quizList;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +47,9 @@ class _QuisListState extends State<QuizList> {
 
   Future<List<Quiz>> getQuizes() async {
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('quizes').get();
-    return qn.docs.map((doc) => Quiz.fromMap(doc.data())).toList();
+    var quizList = qn.docs.map((doc) => Quiz.fromMap(doc.data())).toList();
+    this.quizList = quizList;
+    return quizList;
   }
 
   _createButton(Quiz quiz) {
@@ -57,7 +61,7 @@ class _QuisListState extends State<QuizList> {
       color: bgColor,
       textColor: textColor,
       onPressed: () => {
-        // Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments([quiz], 0))
+        Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(this.quizList, this.quizList.indexOf(quiz)))
       },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
