@@ -12,15 +12,16 @@ class QuizList extends StatefulWidget {
 
 class _QuisListState extends State<QuizList> {
 
+  // https://stackoverflow.com/questions/61884007/how-to-stop-setstate-when-called-from-displaying-black-screen-with-loading-widge
+  Future<List<Quiz>> futureQuizList;
   List<Quiz> quizList;
   List<Quiz> favorites = [];
-  // https://stackoverflow.com/questions/61884007/how-to-stop-setstate-when-called-from-displaying-black-screen-with-loading-widge
-  Future<List<Quiz>> _futureQuizList;
+  bool isFilterApplied = false;
 
   @override
   void initState() {
     super.initState();
-    _futureQuizList = this.getQuizes();
+    futureQuizList = this.getQuizes();
   }
 
   @override
@@ -29,15 +30,27 @@ class _QuisListState extends State<QuizList> {
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text("Lista de Questões"),
+        actions: [
+          IconButton(icon: Icon(
+            this.isFilterApplied ? Icons.filter_alt : Icons.filter_alt_outlined,
+            color: Colors.white
+          ), onPressed: () => {
+            setState(() {
+              this.isFilterApplied = !this.isFilterApplied;
+            })
+          })
+        ],
       ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         child: FutureBuilder(
-          future: this._futureQuizList,
+          future: this.futureQuizList,
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return ListView.builder(
+              return ListView.separated(
+                padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 0),
+                separatorBuilder: (BuildContext context, int index) => Divider(height: 15,),
                 itemCount: snapshot.data.length,          
                 itemBuilder: (_, index) {
                   return this._createButton(snapshot.data[index]);
@@ -72,7 +85,7 @@ class _QuisListState extends State<QuizList> {
         Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(this.quizList, this.quizList.indexOf(quiz)))
       },
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(0),
         side: BorderSide(color: bgColor)
       ),
     );
@@ -80,26 +93,29 @@ class _QuisListState extends State<QuizList> {
 
   SizedBox _getMaxWidthSizedBox(String text, Quiz quiz) {
     var isQuizFavorite = this.favorites.indexOf(quiz) != -1;
-    var onPressedFn = isQuizFavorite ? this.removeFavorite : this.addFavorite;
-    return SizedBox(width: double.infinity, child: Row(
-      children: [
-        Text(text, textAlign: TextAlign.center,),
-        Spacer(),
-        IconButton(icon: Icon(
-          isQuizFavorite ? Icons.favorite : Icons.favorite_outline,
-          color: Colors.white,
-        ), onPressed: () => onPressedFn(quiz))
-      ]
-    ));
+    var onPressedFn = isQuizFavorite ? this._removeFavorite : this._addFavorite;
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        children: [
+          Text(text, textAlign: TextAlign.center,),
+          Spacer(),
+          IconButton(icon: Icon(
+            isQuizFavorite ? Icons.favorite : Icons.favorite_outline,
+            color: Colors.white,
+          ), onPressed: () => onPressedFn(quiz))
+        ]
+      )
+    );
   }
 
-  void removeFavorite(Quiz quiz) {
+  void _removeFavorite(Quiz quiz) {
     setState(() {
       this.favorites.remove(quiz);
     });
   }
 
-  void addFavorite(Quiz quiz) {
+  void _addFavorite(Quiz quiz) {
     setState(() {
       this.favorites.add(quiz);
     });
