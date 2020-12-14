@@ -105,7 +105,7 @@ class _QuizScreenState extends State<QuizScreen> {
           barrierDismissible: true,
           builder: (BuildContext context) => AlertDialog(
             title: Text(isSelectedAnswerCorrect),
-            content: Text('Resposta correta: ' + rightAnswer.description + '\n \n' + selectedOption.explanation),
+            content: Text(selectedOption.explanation),
             actions: [
               FlatButton(child: null, onPressed: null,)
             ],
