@@ -22,8 +22,8 @@ class _QuisListState extends State<QuizList> {
   List<Quiz> favorites = [];
   List<String> tags = [];
   List<Filter> filters = [
-    Filter('Simulados', []),
-    Filter('Questões favoritas', [])
+    Filter('Simulados', [], Icon(Icons.article)),
+    Filter('Questões favoritas', [], Icon(Icons.favorite))
   ];
   String selectedFilter = 'Simulados';
 
@@ -56,7 +56,7 @@ class _QuisListState extends State<QuizList> {
                     return DropdownButton(
                       style: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color),
                       value: this.selectedFilter,
-                      items: this.filters.map((filter) => DropdownMenuItem(child: Text(filter.key), value: filter.key,)).toList(),
+                      items: this.filters.map((filter) => this._createDropdownMenuItemFromFilter(filter)).toList(),
                       onChanged: (item) => {
                         this._updateSelectedFilter(item),
                         if (item.contains('Questões sobre ')) {
@@ -109,6 +109,22 @@ class _QuisListState extends State<QuizList> {
   Future<List<Simulado>> getSimulados() async {
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('simulados').get();
     return qn.docs.map((doc) => Simulado.fromMap(doc.data())).toList();
+  }
+
+  DropdownMenuItem<String> _createDropdownMenuItemFromFilter(Filter filter) {
+    List<Widget> rowChildren = [];
+    if (filter.icon != null) {
+      rowChildren.add(filter.icon);
+    } else {
+      rowChildren.add(Icon(Icons.subject));
+    }
+    rowChildren.add(SizedBox(width: 10,),);
+    rowChildren.add(Text(filter.key));
+    print(rowChildren);
+    return DropdownMenuItem(
+      child: Row(children: rowChildren,),
+      value: filter.key
+    );
   }
 
   _createButton(dynamic item) {
