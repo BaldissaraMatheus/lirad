@@ -25,7 +25,7 @@ class _QuisListState extends State<QuizList> {
     Filter('Simulados', []),
     Filter('Questões favoritas', [])
   ];
-  bool isFilterApplied = false;
+  String selectedFilter = 'Simulados';
 
   @override
   void initState() {
@@ -55,9 +55,10 @@ class _QuisListState extends State<QuizList> {
                   if (index == 0) {
                     return DropdownButton(
                       style: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color),
-                      value: this.filters[0].key,
+                      value: this.selectedFilter,
                       items: this.filters.map((filter) => DropdownMenuItem(child: Text(filter.key), value: filter.key,)).toList(),
                       onChanged: (item) => {
+                        this._updateSelectedFilter(item),
                         if (item.contains('Questões sobre ')) {
                           this._updateList(
                             this.filters.where((filter) => filter.key == item).map((filter) => filter.quizes).toList()[0]
@@ -199,4 +200,9 @@ class _QuisListState extends State<QuizList> {
     });
   }
 
+  void _updateSelectedFilter(String filter) {
+    setState(() {
+      this.selectedFilter = filter;
+    });
+  }
 }
