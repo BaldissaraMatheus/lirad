@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/filter.dart';
 import 'package:frontend/models/quiz.dart';
+import 'package:frontend/models/simulado.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
 
 class QuizList extends StatefulWidget {
@@ -14,8 +15,10 @@ class QuizList extends StatefulWidget {
 class _QuisListState extends State<QuizList> {
 
   // https://stackoverflow.com/questions/61884007/how-to-stop-setstate-when-called-from-displaying-black-screen-with-loading-widge
-  Future<List<Quiz>> futureQuizList;
+  Future<List<dynamic>> futureItemsList;
+  List<dynamic> itemsList;
   List<Quiz> quizList;
+  List<Simulado> simuladosList;
   List<Quiz> favorites = [];
   List<String> tags = [];
   List<Filter> filters = [
@@ -27,7 +30,7 @@ class _QuisListState extends State<QuizList> {
   @override
   void initState() {
     super.initState();
-    futureQuizList = this.getQuizes();
+    futureItemsList = this.getItems();
   }
 
   @override
@@ -41,13 +44,13 @@ class _QuisListState extends State<QuizList> {
         width: double.infinity,
         height: double.infinity,
         child: FutureBuilder(
-          future: this.futureQuizList,
+          future: this.futureItemsList,
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return ListView.separated(
                 padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 0),
                 separatorBuilder: (BuildContext context, int index) => Divider(height: 15,),
-                itemCount: this.quizList.length + 1,          
+                itemCount: this.itemsList.length + 1,          
                 itemBuilder: (_, index) {
                   if (index == 0) {
                     return DropdownButton(
@@ -56,14 +59,18 @@ class _QuisListState extends State<QuizList> {
                       items: this.filters.map((filter) => DropdownMenuItem(child: Text(filter.key), value: filter.key,)).toList(),
                       onChanged: (item) => {
                         if (item.contains('Questões sobre ')) {
-                          this._updateQuizes(
+                          this._updateList(
                             this.filters.where((filter) => filter.key == item).map((filter) => filter.quizes).toList()[0]
                           )
+                        } else if (item == 'Simulados') {
+                          this._updateList(this.simuladosList)
+                        } else {
+                          this._updateList([])
                         }
                       },
                     );
                   }
-                  return this._createButton(this.quizList[index - 1]);
+                  return this._createButton(this.itemsList[index - 1]);
                 },
               );
             } else {
@@ -77,10 +84,11 @@ class _QuisListState extends State<QuizList> {
     );
   }
 
-  Future<List<Quiz>> getQuizes() async {
+  Future<List<dynamic>> getItems() async {
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('quizes').get();
     var quizList = qn.docs.map((doc) => Quiz.fromMap(doc.data())).toList();
     this.quizList = quizList;
+    this.simuladosList = await this.getSimulados();
     var tags = quizList
       .map((quiz) => quiz.tags)
       .expand((tag) => tag)
@@ -93,11 +101,30 @@ class _QuisListState extends State<QuizList> {
         this.quizList.where((quiz) => quiz.tags.contains(tag)).toList()
       ));
     this.filters.addAll(filters);
-    return quizList;
+    this.itemsList = this.simuladosList;
+    return this.itemsList;
   }
 
-  _createButton(Quiz quiz) {
-    var maxWidthSizedBox = this._getMaxWidthSizedBox(quiz.title, quiz);
+  Future<List<Simulado>> getSimulados() async {
+    QuerySnapshot qn = await FirebaseFirestore.instance.collection('simulados').get();
+    return qn.docs.map((doc) => Simulado.fromMap(doc.data())).toList();
+  }
+
+  _createButton(dynamic item) {
+    if (item is Quiz) {
+      return this._createQuizButton(item);
+    } else {
+      return this._createSimuladoButton(item);
+    }
+  }
+  _createQuizButton(Quiz quiz) {
+    var isQuizFavorite = this.favorites.indexOf(quiz) != -1;
+    var onPressedFn = isQuizFavorite ? this._removeFavorite : this._addFavorite;
+    var favoriteBtn = IconButton(icon: Icon(
+      isQuizFavorite ? Icons.favorite : Icons.favorite_outline,
+      color: Colors.white,
+    ), onPressed: () => onPressedFn(quiz));
+    var maxWidthSizedBox = this._getMaxWidthSizedBox(quiz.title, favoriteBtn);
     var bgColor = Theme.of(context).primaryColor;
     var textColor = Theme.of(context).primaryTextTheme.bodyText1.color;
     return RaisedButton(
@@ -113,21 +140,42 @@ class _QuisListState extends State<QuizList> {
       ),
     );
   }
+  
+  _createSimuladoButton(Simulado simulado) {
+    var maxWidthSizedBox = this._getMaxWidthSizedBox(simulado.title);
+    var bgColor = Theme.of(context).primaryColor;
+    var textColor = Theme.of(context).primaryTextTheme.bodyText1.color;
+    return RaisedButton(
+      child: maxWidthSizedBox,
+      color: bgColor,
+      textColor: textColor,
+      onPressed: () async => {
+        Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(
+          this.quizList.where((quiz) => simulado.quizesTitle.contains(quiz.title)).toList(),
+          0
+        ))
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+        side: BorderSide(color: bgColor)
+      ),
+    );
+  }
 
-  SizedBox _getMaxWidthSizedBox(String text, Quiz quiz) {
-    var isQuizFavorite = this.favorites.indexOf(quiz) != -1;
-    var onPressedFn = isQuizFavorite ? this._removeFavorite : this._addFavorite;
+  SizedBox _getMaxWidthSizedBox(String text, [IconButton favoriteBtn]) {
+    print(text);
+    List<Widget> sizedBoxRowChildren = [
+      Text(text, textAlign: TextAlign.center,),
+    ];
+    if (favoriteBtn != null) {
+      sizedBoxRowChildren.add(Spacer());
+      sizedBoxRowChildren.add(favoriteBtn);
+    }
     return SizedBox(
+      height: 50,
       width: double.infinity,
       child: Row(
-        children: [
-          Text(text, textAlign: TextAlign.center,),
-          Spacer(),
-          IconButton(icon: Icon(
-            isQuizFavorite ? Icons.favorite : Icons.favorite_outline,
-            color: Colors.white,
-          ), onPressed: () => onPressedFn(quiz))
-        ]
+        children: sizedBoxRowChildren
       )
     );
   }
@@ -144,10 +192,10 @@ class _QuisListState extends State<QuizList> {
     });
   }
 
-  void _updateQuizes(List<Quiz> quizes) {
+  void _updateList(List<dynamic> items) {
     setState(() {
-      this.quizList = quizes;
-      print(this.quizList);
+      print(items);
+      this.itemsList = items;
     });
   }
 
