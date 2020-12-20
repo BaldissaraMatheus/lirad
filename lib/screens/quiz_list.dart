@@ -65,8 +65,8 @@ class _QuisListState extends State<QuizList> {
                           )
                         } else if (item == 'Simulados') {
                           this._updateList(this.simuladosList)
-                        } else {
-                          this._updateList([])
+                        } else if (item == 'Questões favoritas') {
+                          this._updateList(this.favorites)
                         }
                       },
                     );
@@ -128,12 +128,13 @@ class _QuisListState extends State<QuizList> {
     var maxWidthSizedBox = this._getMaxWidthSizedBox(quiz.title, favoriteBtn);
     var bgColor = Theme.of(context).primaryColor;
     var textColor = Theme.of(context).primaryTextTheme.bodyText1.color;
+    var sequenceList = this.selectedFilter == 'Questões favoritas' ? this.favorites : this.quizList;
     return RaisedButton(
       child: maxWidthSizedBox,
       color: bgColor,
       textColor: textColor,
       onPressed: () => {
-        Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(this.quizList, this.quizList.indexOf(quiz)))
+        Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(sequenceList, sequenceList.indexOf(quiz)))
       },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0),
@@ -144,8 +145,8 @@ class _QuisListState extends State<QuizList> {
   
   _createSimuladoButton(Simulado simulado) {
     var maxWidthSizedBox = this._getMaxWidthSizedBox(simulado.title);
-    var bgColor = Theme.of(context).primaryColor;
-    var textColor = Theme.of(context).primaryTextTheme.bodyText1.color;
+    var bgColor = Theme.of(context).accentColor;
+    var textColor = Theme.of(context).accentTextTheme.bodyText1.color;
     return RaisedButton(
       child: maxWidthSizedBox,
       color: bgColor,
