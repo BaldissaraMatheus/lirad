@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/models/filter.dart';
 import 'package:frontend/models/quiz.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
 
@@ -16,6 +17,11 @@ class _QuisListState extends State<QuizList> {
   Future<List<Quiz>> futureQuizList;
   List<Quiz> quizList;
   List<Quiz> favorites = [];
+  List<String> tags = [];
+  List<Filter> filters = [
+    Filter('Simulados', []),
+    Filter('Questões favoritas', [])
+  ];
   bool isFilterApplied = false;
 
   @override
@@ -30,16 +36,6 @@ class _QuisListState extends State<QuizList> {
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text("Lista de Questões"),
-        actions: [
-          IconButton(icon: Icon(
-            this.isFilterApplied ? Icons.filter_alt : Icons.filter_alt_outlined,
-            color: Colors.white
-          ), onPressed: () => {
-            setState(() {
-              this.isFilterApplied = !this.isFilterApplied;
-            })
-          })
-        ],
       ),
       body: Container(
         width: double.infinity,
@@ -51,10 +47,25 @@ class _QuisListState extends State<QuizList> {
               return ListView.separated(
                 padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 0),
                 separatorBuilder: (BuildContext context, int index) => Divider(height: 15,),
-                itemCount: snapshot.data.length,          
+                itemCount: this.quizList.length + 1,          
                 itemBuilder: (_, index) {
-                  return this._createButton(snapshot.data[index]);
-              });
+                  if (index == 0) {
+                    return DropdownButton(
+                      style: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color),
+                      value: this.filters[0].key,
+                      items: this.filters.map((filter) => DropdownMenuItem(child: Text(filter.key), value: filter.key,)).toList(),
+                      onChanged: (item) => {
+                        if (item.contains('Questões sobre ')) {
+                          this._updateQuizes(
+                            this.filters.where((filter) => filter.key == item).map((filter) => filter.quizes).toList()[0]
+                          )
+                        }
+                      },
+                    );
+                  }
+                  return this._createButton(this.quizList[index - 1]);
+                },
+              );
             } else {
               return Center(
                 child: Text('Loading'),
@@ -70,6 +81,18 @@ class _QuisListState extends State<QuizList> {
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('quizes').get();
     var quizList = qn.docs.map((doc) => Quiz.fromMap(doc.data())).toList();
     this.quizList = quizList;
+    var tags = quizList
+      .map((quiz) => quiz.tags)
+      .expand((tag) => tag)
+      .map((tag) => tag)
+      .toSet()
+      .toList();
+    var filters = tags
+      .map((tag) => Filter(
+        'Questões sobre ' + tag,
+        this.quizList.where((quiz) => quiz.tags.contains(tag)).toList()
+      ));
+    this.filters.addAll(filters);
     return quizList;
   }
 
@@ -118,6 +141,13 @@ class _QuisListState extends State<QuizList> {
   void _addFavorite(Quiz quiz) {
     setState(() {
       this.favorites.add(quiz);
+    });
+  }
+
+  void _updateQuizes(List<Quiz> quizes) {
+    setState(() {
+      this.quizList = quizes;
+      print(this.quizList);
     });
   }
 
