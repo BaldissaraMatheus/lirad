@@ -1,52 +1,56 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/models/lirad_user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:rxdart/rxdart.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: []);
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Stream<User> user; // firebase user
-  Stream<Map<String, dynamic>> profile; // custom user data in Firestore
-  PublishSubject loading = PublishSubject();
+  // Stream<User> user;
 
   AuthService() {
-    user = _auth.authStateChanges();
-    profile = user.switchMap((User user) {
+    // user = _auth.authStateChanges();
+    // liradUser = user.switchMap((User user) {
+    //   if (user != null) {
+    //     print('user found: ' + user.uid);
+    //     return _db
+    //       .collection('users')
+    //       .doc(user.uid)
+    //       .snapshots()
+    //       .map((snap) => LiradUser.fromMap(snap.data()));
+    //   } else {
+    //     print('user not found.');
+    //     return Stream.value(null);
+    //   }
+    // });
+  }
 
-      if (user != null) {
-        print(user);
-        return _db
-          .collection('users')
-          .doc(user.uid)
-          .snapshots()
-          .map((snap) => snap.data());
-      } else {
-        return Stream.value({});
-      }
-    });
+  Stream<LiradUser> get user {
+    return _auth.authStateChanges().map(
+      (User user) => user == null
+        ? LiradUser.fromUser(user)
+        : null
+    );
   }
 
   Future<User> googleSignIn() async {
     try {
-      loading.add(true);
       GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.credential(
+      AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final User user = (await _auth.signInWithCredential(credential)).user;
-      updateUserData(user);
-  
-      loading.add(false);
+      User user = (await _auth.signInWithCredential(credential)).user;
+      LiradUser liradUser = LiradUser.fromUser(user);  
+      updateUserData(liradUser);
 
-      print("signed in " + user.displayName);
+      print("signed in " + liradUser.displayName);
 
       return user;
 
@@ -57,7 +61,7 @@ class AuthService {
     }
   }
 
-  void updateUserData(User user) async {
+  void updateUserData(LiradUser user) async {
     DocumentReference ref = _db.collection('users').doc(user.uid);
 
     return ref.set({
@@ -65,10 +69,9 @@ class AuthService {
       'email': user.email,
       'photoURL': user.photoURL,
       'displayName': user.displayName,
-      'lastSeen': DateTime.now()
+      'favoriteQuestions': user.favoriteQuestions
     }, SetOptions(merge: true));
   }
-
 
   void signOut() {
     _auth.signOut();

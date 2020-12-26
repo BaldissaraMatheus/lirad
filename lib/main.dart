@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/models/lirad_user.dart';
+import 'package:provider/provider.dart';
 import './config/palette.dart';
 import 'router_generator.dart';
 
@@ -52,10 +54,25 @@ void main(List<String> args) async {
 class LiradApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: theme,
-      initialRoute: '/',
-      onGenerateRoute: RouterGenerator.generate,
+    return ChangeNotifierProvider(
+        create: (context) => LiradUser(),
+        // In this sample app, CatalogModel never changes, so a simple Provider
+        // is sufficient.
+        // CartModel is implemented as a ChangeNotifier, which calls for the use
+        // of ChangeNotifierProvider. Moreover, CartModel depends
+        // on CatalogModel, so a ProxyProvider is needed.
+        // ChangeNotifierProxyProvider<CatalogModel, CartModel>(
+        //   create: (context) => CartModel(),
+        //   update: (context, catalog, cart) {
+        //     cart.catalog = catalog;
+        //     return cart;
+        //   },
+        // ),
+      child: MaterialApp(
+        theme: theme,
+        initialRoute: '/',
+        onGenerateRoute: RouterGenerator.generate,
+      )
     );
   }
 }

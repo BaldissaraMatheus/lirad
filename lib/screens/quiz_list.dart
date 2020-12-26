@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/filter.dart';
+import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/models/quiz.dart';
 import 'package:frontend/models/simulado.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
+import 'package:frontend/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class QuizList extends StatefulWidget {
   @override
@@ -20,17 +23,22 @@ class _QuisListState extends State<QuizList> {
   List<Quiz> quizList;
   List<Simulado> simuladosList;
   List<Quiz> favorites = [];
-  List<String> tags = [];
   List<Filter> filters = [
     Filter('Simulados', [], Icon(Icons.article)),
     Filter('Questões favoritas', [], Icon(Icons.favorite))
   ];
   String selectedFilter = 'Simulados';
+  LiradUser user;
 
   @override
   void initState() {
     super.initState();
-    futureItemsList = this.getItems();
+    this.user = Provider.of<LiradUser>(context, listen: false);
+    futureItemsList = this.getItems().then((value) =>
+      this.favorites = this.quizList.where((quiz) =>
+        this.user.favoriteQuestions.contains(quiz.title)
+      ).toList()
+    );
   }
 
   @override
@@ -38,7 +46,7 @@ class _QuisListState extends State<QuizList> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: Text("Lista de Questões"),
+        title: Text(this.user.toString())
       ),
       body: Container(
         width: double.infinity,
@@ -120,7 +128,6 @@ class _QuisListState extends State<QuizList> {
     }
     rowChildren.add(SizedBox(width: 10,),);
     rowChildren.add(Text(filter.key));
-    print(rowChildren);
     return DropdownMenuItem(
       child: Row(children: rowChildren,),
       value: filter.key
@@ -181,7 +188,6 @@ class _QuisListState extends State<QuizList> {
   }
 
   SizedBox _getMaxWidthSizedBox(String text, [IconButton favoriteBtn]) {
-    print(text);
     List<Widget> sizedBoxRowChildren = [
       Text(text, textAlign: TextAlign.center,),
     ];
@@ -192,9 +198,7 @@ class _QuisListState extends State<QuizList> {
     return SizedBox(
       height: 50,
       width: double.infinity,
-      child: Row(
-        children: sizedBoxRowChildren
-      )
+      child: Row(children: sizedBoxRowChildren)
     );
   }
 
@@ -202,17 +206,23 @@ class _QuisListState extends State<QuizList> {
     setState(() {
       this.favorites.remove(quiz);
     });
+    this._updateUserFavoriteQuestions();
   }
 
   void _addFavorite(Quiz quiz) {
     setState(() {
       this.favorites.add(quiz);
     });
+    this._updateUserFavoriteQuestions();
+  }
+
+  void _updateUserFavoriteQuestions() {
+    user.setFavoriteQuestions(this.favorites.map((question) => question.title).toList());
+    authService.updateUserData(user);
   }
 
   void _updateList(List<dynamic> items) {
     setState(() {
-      print(items);
       this.itemsList = items;
     });
   }
