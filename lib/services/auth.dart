@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -73,8 +74,9 @@ class AuthService {
     }, SetOptions(merge: true));
   }
 
-  void signOut() {
+  void signOut(context) {
     _auth.signOut();
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 }
 

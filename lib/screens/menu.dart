@@ -6,10 +6,10 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var routes = [
-      NamedRoutes.LOGIN,
       NamedRoutes.QUIZES,
       NamedRoutes.QUIZES_RANDOM,
-      NamedRoutes.VIDEOS
+      NamedRoutes.VIDEOS,
+      NamedRoutes.LOGOUT
     ];
 
     return Scaffold(

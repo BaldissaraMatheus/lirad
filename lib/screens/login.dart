@@ -34,7 +34,7 @@ class LoginButton extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return MaterialButton(
-            onPressed: () => authService.signOut(),
+            onPressed: () => authService.signOut(context),
             color: Colors.red,
             textColor: Colors.white,
             child: Text('Signout'),
