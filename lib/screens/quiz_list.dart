@@ -46,7 +46,7 @@ class _QuisListState extends State<QuizList> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: Text(this.user.toString())
+        title: Text('Lista de simulados e questões')
       ),
       body: Container(
         width: double.infinity,

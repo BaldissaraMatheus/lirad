@@ -34,8 +34,8 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       onPressed: () => authService.googleSignIn(context),
-      color: Colors.white,
-      textColor: Colors.black,
+      color: Theme.of(context).accentColor,
+      textColor: Theme.of(context).accentTextTheme.bodyText1.color,
       child: Text('Entrar com o Google'),
     );
   }
