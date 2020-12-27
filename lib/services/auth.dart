@@ -37,7 +37,7 @@ class AuthService {
     );
   }
 
-  Future<User> googleSignIn() async {
+  Future<User> googleSignIn(context) async {
     try {
       GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       GoogleSignInAuthentication googleAuth = await googleUser.authentication;
@@ -52,7 +52,7 @@ class AuthService {
       updateUserData(liradUser);
 
       print("signed in " + liradUser.displayName);
-
+      Navigator.of(context).pushReplacementNamed('/');
       return user;
 
     } on PlatformException catch (platformError, platformStacktrace) {
