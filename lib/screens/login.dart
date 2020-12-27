@@ -12,14 +12,17 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        title: Text("Login"),
-      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         child: Center(
-          child: LoginButton(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/logo-only-text.png', height: 250, width: 300,),
+              LoginButton(),
+            ],
+          )
         )
       )
     );
@@ -29,25 +32,11 @@ class _LoginScreenState extends State<LoginScreen> {
 class LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: authService.user,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return MaterialButton(
-            onPressed: () => authService.signOut(context),
-            color: Colors.red,
-            textColor: Colors.white,
-            child: Text('Signout'),
-          );
-        } else {
-          return MaterialButton(
-            onPressed: () => authService.googleSignIn(),
-            color: Colors.white,
-            textColor: Colors.black,
-            child: Text('Login with Google'),
-          );
-        }
-      }
+    return MaterialButton(
+      onPressed: () => authService.googleSignIn(),
+      color: Colors.white,
+      textColor: Colors.black,
+      child: Text('Entrar com o Google'),
     );
   }
 }
