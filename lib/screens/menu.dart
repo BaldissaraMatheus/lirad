@@ -14,6 +14,7 @@ class Menu extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Menu', style: TextStyle(color: Theme.of(context).primaryTextTheme.headline6.color),),
       ),
       body: Center(
