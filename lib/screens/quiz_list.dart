@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
+import 'package:frontend/main.dart';
 import 'package:frontend/models/filter.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/models/quiz.dart';
@@ -28,6 +30,7 @@ class _QuisListState extends State<QuizList> {
     Filter('Questões favoritas', [], Icon(Icons.favorite))
   ];
   String selectedFilter = 'Simulados';
+  bool loadRandomOrder = false;
   LiradUser user;
 
   @override
@@ -61,22 +64,69 @@ class _QuisListState extends State<QuizList> {
                 itemCount: this.itemsList.length + 1,          
                 itemBuilder: (_, index) {
                   if (index == 0) {
-                    return DropdownButton(
-                      style: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color),
-                      value: this.selectedFilter,
-                      items: this.filters.map((filter) => this._createDropdownMenuItemFromFilter(filter)).toList(),
-                      onChanged: (item) => {
-                        this._updateSelectedFilter(item),
-                        if (item.contains('Questões sobre ')) {
-                          this._updateList(
-                            this.filters.where((filter) => filter.key == item).map((filter) => filter.quizes).toList()[0]
-                          )
-                        } else if (item == 'Simulados') {
-                          this._updateList(this.simuladosList)
-                        } else if (item == 'Questões favoritas') {
-                          this._updateList(this.favorites)
-                        }
-                      },
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text("Ordem aleatória"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            DropdownButton(
+                              style: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color),
+                              value: this.selectedFilter,
+                              items: this.filters.map((filter) => this._createDropdownMenuItemFromFilter(filter)).toList(),
+                              onChanged: (item) => {
+                                this._updateSelectedFilter(item),
+                                if (item.contains('Questões sobre ')) {
+                                  this._updateList(
+                                    this.filters.where((filter) => filter.key == item).map((filter) => filter.quizes).toList()[0]
+                                  )
+                                } else if (item == 'Simulados') {
+                                  this._updateList(this.simuladosList)
+                                } else if (item == 'Questões favoritas') {
+                                  this._updateList(this.favorites)
+                                }
+                              },
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(20)
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 1), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              margin: EdgeInsets.only(right: 12),
+                              child: FlutterSwitch(
+                                activeColor: Theme.of(context).accentColor,
+                                inactiveColor: Theme.of(context).primaryColor,
+                                // width: 105.0,
+                                width: 75,
+                                height: 35.0,
+                                toggleSize: 20.0,
+                                value: loadRandomOrder,
+                                borderRadius: 30.0,
+                                padding: 8.0,
+                                // activeText: 'Ordem aleatória',
+                                // showOnOff: true,
+                                activeTextColor: Theme.of(context).primaryColor,
+                                valueFontSize: 10,
+                                onToggle: (val) => setState(() => loadRandomOrder = val ),
+                              ),
+                            )
+                          ],
+                        )
+                      ]
                     );
                   }
                   return this._createButton(this.itemsList[index - 1]);
@@ -151,14 +201,19 @@ class _QuisListState extends State<QuizList> {
     var maxWidthSizedBox = this._getMaxWidthSizedBox(quiz.title, favoriteBtn);
     var bgColor = Theme.of(context).primaryColor;
     var textColor = Theme.of(context).primaryTextTheme.bodyText1.color;
-    var sequenceList = this.selectedFilter == 'Questões favoritas' ? this.favorites : this.quizList;
+    List<Quiz> sequenceList = [...this.itemsList];
+    var initialPosition = sequenceList.indexOf(quiz);
+    if (this.loadRandomOrder) {
+      sequenceList.shuffle();
+      var clickedQuiz = sequenceList.removeAt(sequenceList.indexOf(quiz));
+      sequenceList.insert(0, clickedQuiz);
+      initialPosition = 0;
+    }
     return RaisedButton(
       child: maxWidthSizedBox,
       color: bgColor,
       textColor: textColor,
-      onPressed: () => {
-        Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(sequenceList, sequenceList.indexOf(quiz)))
-      },
+      onPressed: () => Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(sequenceList, initialPosition)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0),
         side: BorderSide(color: bgColor)
@@ -170,16 +225,15 @@ class _QuisListState extends State<QuizList> {
     var maxWidthSizedBox = this._getMaxWidthSizedBox(simulado.title);
     var bgColor = Theme.of(context).accentColor;
     var textColor = Theme.of(context).accentTextTheme.bodyText1.color;
+    var sequenceList = this.quizList.where((quiz) => simulado.quizesTitle.contains(quiz.title)).toList();
+    if (this.loadRandomOrder) {
+      sequenceList.shuffle();
+    }
     return RaisedButton(
       child: maxWidthSizedBox,
       color: bgColor,
       textColor: textColor,
-      onPressed: () async => {
-        Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(
-          this.quizList.where((quiz) => simulado.quizesTitle.contains(quiz.title)).toList(),
-          0
-        ))
-      },
+      onPressed: () => Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(sequenceList, 0)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0),
         side: BorderSide(color: bgColor)
