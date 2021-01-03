@@ -4,30 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: []);
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-
-  // Stream<User> user;
-
-  AuthService() {
-    // user = _auth.authStateChanges();
-    // liradUser = user.switchMap((User user) {
-    //   if (user != null) {
-    //     print('user found: ' + user.uid);
-    //     return _db
-    //       .collection('users')
-    //       .doc(user.uid)
-    //       .snapshots()
-    //       .map((snap) => LiradUser.fromMap(snap.data()));
-    //   } else {
-    //     print('user not found.');
-    //     return Stream.value(null);
-    //   }
-    // });
-  }
 
   Stream<LiradUser> get user {
     return _auth.authStateChanges().map(
@@ -47,9 +29,18 @@ class AuthService {
         idToken: googleAuth.idToken,
       );
 
-      User user = (await _auth.signInWithCredential(credential)).user;
-      LiradUser liradUser = LiradUser.fromUser(user);  
+      UserCredential uc = await _auth.signInWithCredential(credential);
+      User user = uc.user;
+      DocumentSnapshot ds = await _db.collection('users').doc(user.uid).get();
+      LiradUser liradUser;
+      if (ds.data() == null) {
+        liradUser = LiradUser.fromUser(user);
+      } else {
+        liradUser = LiradUser.fromMap(ds.data());
+      }
+      LiradUser currUser = Provider.of<LiradUser>(context, listen: false);
       updateUserData(liradUser);
+      currUser.updateUser(liradUser);
 
       print("signed in " + liradUser.displayName);
       Navigator.of(context).pushReplacementNamed('/');

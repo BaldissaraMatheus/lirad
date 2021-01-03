@@ -7,7 +7,6 @@ class Menu extends StatelessWidget {
   Widget build(BuildContext context) {
     var routes = [
       NamedRoutes.QUIZES,
-      NamedRoutes.QUIZES_RANDOM,
       NamedRoutes.VIDEOS,
       NamedRoutes.LOGOUT
     ];

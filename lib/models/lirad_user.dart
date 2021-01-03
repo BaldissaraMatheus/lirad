@@ -30,6 +30,14 @@ class LiradUser extends ChangeNotifier {
     );
   }
 
+  void updateUser(LiradUser user) {
+    uid = user.uid;
+    email = user.email;
+    photoURL = user.photoURL;
+    displayName = user.displayName;
+    favoriteQuestions = user.favoriteQuestions;
+  }
+
   void setFavoriteQuestions(List<String> favoriteQuestions) {
     this.favoriteQuestions = favoriteQuestions;
   }

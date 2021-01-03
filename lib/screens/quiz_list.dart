@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:frontend/main.dart';
 import 'package:frontend/models/filter.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/models/quiz.dart';
@@ -37,6 +36,8 @@ class _QuisListState extends State<QuizList> {
   void initState() {
     super.initState();
     this.user = Provider.of<LiradUser>(context, listen: false);
+    print(this.user.displayName);
+    print(this.user.uid);
     futureItemsList = this.getItems().then((value) =>
       this.favorites = this.quizList.where((quiz) =>
         this.user.favoriteQuestions.contains(quiz.title)
@@ -102,7 +103,7 @@ class _QuisListState extends State<QuizList> {
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 2,
-                                    offset: Offset(0, 1), // changes position of shadow
+                                    offset: Offset(0, 1),
                                   ),
                                 ],
                               ),
@@ -110,15 +111,12 @@ class _QuisListState extends State<QuizList> {
                               child: FlutterSwitch(
                                 activeColor: Theme.of(context).accentColor,
                                 inactiveColor: Theme.of(context).primaryColor,
-                                // width: 105.0,
                                 width: 75,
                                 height: 35.0,
                                 toggleSize: 20.0,
                                 value: loadRandomOrder,
                                 borderRadius: 30.0,
                                 padding: 8.0,
-                                // activeText: 'Ordem aleatória',
-                                // showOnOff: true,
                                 activeTextColor: Theme.of(context).primaryColor,
                                 valueFontSize: 10,
                                 onToggle: (val) => setState(() => loadRandomOrder = val ),

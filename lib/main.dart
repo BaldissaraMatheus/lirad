@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/lirad_user.dart';
+import 'package:frontend/services/auth.dart';
 import 'package:provider/provider.dart';
 import './config/palette.dart';
 import 'router_generator.dart';
@@ -32,7 +33,6 @@ void main(List<String> args) async {
   await Firebase.initializeApp();
   FirebaseMessaging fm = FirebaseMessaging();
   var token = await fm.getToken();
-  print(token);
   fm.configure(
     onMessage: (Map<String, dynamic> message) async {
       print("onMessage: $message");
@@ -48,6 +48,10 @@ void main(List<String> args) async {
       // _navigateToItemDetail(message);
     },
   );
+  // authService.user. . listen((event) {
+  //   print('alooooooooo');
+  //   print(event);
+  // });
   runApp(LiradApp());
 }
 
@@ -70,7 +74,7 @@ class LiradApp extends StatelessWidget {
         // ),
       child: MaterialApp(
         theme: theme,
-        initialRoute: '/',
+        initialRoute: '/login',
         onGenerateRoute: RouterGenerator.generate,
       )
     );
