@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/config/routes.dart';
+import 'package:frontend/models/lirad_user.dart';
+import 'package:provider/provider.dart';
 
 class Menu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LiradUser user = Provider.of<LiradUser>(context, listen: false);
     var routes = [
       NamedRoutes.QUIZES,
       NamedRoutes.VIDEOS,
-      NamedRoutes.LOGOUT
+      NamedRoutes.PAGINA_DO_LIGATE,
+      NamedRoutes.LOGOUT,
     ];
+    var accessibleRoutes = user.ligante == true
+      ? routes
+      : routes.where((route) => route.restrictToLigante == false).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -20,9 +27,9 @@ class Menu extends StatelessWidget {
         child: ListView.separated(
           padding: EdgeInsets.only(left: 10, right: 10, top: 14, bottom: 0),
           separatorBuilder: (BuildContext context, int index) => Divider(height: 15,),
-          itemCount: routes.length,
+          itemCount: accessibleRoutes.length,
           itemBuilder: (_, index) {
-            return this._createRaisedButton(context, routes[index].path, routes[index].desc);
+            return this._createRaisedButton(context, accessibleRoutes[index].path, accessibleRoutes[index].desc);
           },
         )
       ),

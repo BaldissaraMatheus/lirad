@@ -7,8 +7,9 @@ class LiradUser extends ChangeNotifier {
   String photoURL;
   String displayName;
   List<String> favoriteQuestions;
+  bool ligante;
 
-  LiradUser([this.uid, this.email, this.photoURL, this.displayName, this.favoriteQuestions]);
+  LiradUser([this.uid, this.email, this.photoURL, this.displayName, this.favoriteQuestions, this.ligante]);
 
   factory LiradUser.fromMap(Map<String, dynamic> profile) {
     return LiradUser(
@@ -16,7 +17,8 @@ class LiradUser extends ChangeNotifier {
       profile['email'],
       profile['photoURL'],
       profile['displayName'],
-      profile['favoriteQuestions'].cast<String>()
+      profile['favoriteQuestions'].cast<String>(),
+      profile['ligante']
     );
   }
 
@@ -26,7 +28,8 @@ class LiradUser extends ChangeNotifier {
       user.email,
       user.photoURL,
       user.displayName,
-      []
+      [],
+      false
     );
   }
 
@@ -36,6 +39,7 @@ class LiradUser extends ChangeNotifier {
     photoURL = user.photoURL;
     displayName = user.displayName;
     favoriteQuestions = user.favoriteQuestions;
+    ligante = user.ligante;
   }
 
   void setFavoriteQuestions(List<String> favoriteQuestions) {
