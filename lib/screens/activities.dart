@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   @override
   void initState() {
     super.initState();
+    initializeDateFormatting();
     _calendarController = CalendarController();
     _updateEvents();
   }
@@ -34,6 +36,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
       ),
       body: ListView(children: [
         TableCalendar(
+          locale: 'pt_BR',
           calendarController: _calendarController,
           events: _events,
           onDaySelected: (day, events, holidays) {
