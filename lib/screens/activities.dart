@@ -79,34 +79,12 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
     Map<DateTime, List<dynamic>> events = {};
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('eventos').get();
     qn.docs.forEach((doc) {
-      var date = (doc['date'] as Timestamp).toDate();
+      var date = DateTime.parse((doc['date'] as Timestamp).toDate().toIso8601String().substring(0, 10));
       if (!events.keys.contains(date)) {
         events[date] = [];
       }
       events[date].add(doc);
     });
-    // List<Map<String, dynamic>> rawData = [{
-    //   'date': DateTime(2021, 1, 10),
-    //   'events': [
-    //     { 
-    //       'restrictToLigantes': true,
-    //       'restrictToExtensionistas': true,
-    //       'pratica': false,
-    //       'title': 'atividade 1',
-    //       'description': 'descricacao'
-    //     },
-    //     { 
-    //       'restrictToLigantes': true,
-    //       'restrictToExtensionistas': true,
-    //       'pratica': true,
-    //       'title': 'atividade 2',
-    //       'description': 'descricacao'
-    //     }
-    //   ]
-    // }];
-    // rawData.forEach((event) => {
-    //   events[event['date']] = event['events'],
-    // });
     setState(() {
       this._events = events;
     });
@@ -123,9 +101,11 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
             Text(event['pratica'] ? 'Prática' : ''),
           ],),
           SizedBox(height: 12),
-          Row(children: [
-            Text(event['description'])
-          ],)
+          Row(
+            children: [
+              Flexible(child: Text(event['description'])) 
+            ],
+          )
         ]
       )
     ));
