@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -76,28 +77,36 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
 
   _updateEvents() async {
     Map<DateTime, List<dynamic>> events = {};
-    List<Map<String, dynamic>> rawData = [{
-      'date': DateTime(2021, 1, 10),
-      'events': [
-        { 
-          'restrictToLigantes': true,
-          'restrictToExtensionistas': true,
-          'pratica': false,
-          'title': 'atividade 1',
-          'description': 'descricacao'
-        },
-        { 
-          'restrictToLigantes': true,
-          'restrictToExtensionistas': true,
-          'pratica': true,
-          'title': 'atividade 2',
-          'description': 'descricacao'
-        }
-      ]
-    }];
-    rawData.forEach((event) => {
-      events[event['date']] = event['events'],
+    QuerySnapshot qn = await FirebaseFirestore.instance.collection('eventos').get();
+    qn.docs.forEach((doc) {
+      var date = (doc['date'] as Timestamp).toDate();
+      if (!events.keys.contains(date)) {
+        events[date] = [];
+      }
+      events[date].add(doc);
     });
+    // List<Map<String, dynamic>> rawData = [{
+    //   'date': DateTime(2021, 1, 10),
+    //   'events': [
+    //     { 
+    //       'restrictToLigantes': true,
+    //       'restrictToExtensionistas': true,
+    //       'pratica': false,
+    //       'title': 'atividade 1',
+    //       'description': 'descricacao'
+    //     },
+    //     { 
+    //       'restrictToLigantes': true,
+    //       'restrictToExtensionistas': true,
+    //       'pratica': true,
+    //       'title': 'atividade 2',
+    //       'description': 'descricacao'
+    //     }
+    //   ]
+    // }];
+    // rawData.forEach((event) => {
+    //   events[event['date']] = event['events'],
+    // });
     setState(() {
       this._events = events;
     });
