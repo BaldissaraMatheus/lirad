@@ -96,15 +96,15 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
       'date': DateTime(2021, 1, 10),
       'events': [
         { 
-          'restrictToLigante': true,
-          'restrictToExtensionista': true,
+          'restrictToLigantes': true,
+          'restrictToExtensionistas': true,
           'pratica': false,
           'title': 'atividade 1',
           'description': 'descricacao'
         },
         { 
-          'restrictToLigante': true,
-          'restrictToExtensionista': true,
+          'restrictToLigantes': true,
+          'restrictToExtensionistas': true,
           'pratica': true,
           'title': 'atividade 2',
           'description': 'descricacao'
