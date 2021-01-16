@@ -91,6 +91,8 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   }
 
   _buildCardFromEvent(event) {
+    DateTime date = event['date'].toDate();
+    var horario = date.hour.toString() + ':' + date.hour.toString();
     return Card(child: Container(
       padding: EdgeInsets.all(12),
       child: Column(
@@ -99,6 +101,9 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
             Text(event['title']),
             Spacer(),
             Text(event['pratica'] ? 'Prática' : ''),
+          ],),
+          Row(children: [
+            Text(horario)
           ],),
           SizedBox(height: 12),
           Row(
