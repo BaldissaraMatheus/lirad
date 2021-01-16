@@ -44,6 +44,27 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
           availableCalendarFormats: {
             CalendarFormat.month: 'Mês'
           },
+          calendarStyle: CalendarStyle(
+            weekendStyle: Theme.of(context).accentTextTheme.bodyText1,
+            weekdayStyle: Theme.of(context).accentTextTheme.bodyText1,
+            holidayStyle: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color.withOpacity(0.5)),
+            selectedColor: Theme.of(context).accentColor,
+            markersColor: Theme.of(context).primaryColor,
+            outsideWeekendStyle: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color.withOpacity(0.5)),
+            outsideHolidayStyle: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color.withOpacity(0.5)),
+            todayColor: Theme.of(context).primaryColor.withOpacity(0.25),
+          ),
+          daysOfWeekStyle: DaysOfWeekStyle(
+            weekdayStyle: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color.withOpacity(0.75)),
+            weekendStyle: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color.withOpacity(0.75))
+          ),
+          headerStyle: HeaderStyle(
+            centerHeaderTitle: true
+          ),
+          builders: CalendarBuilders(
+            markersBuilder: (context, date, events, holidays) =>
+              [Container(width: 12.0, height: 12.0, decoration: BoxDecoration(shape: BoxShape.circle, color:  Theme.of(context).primaryColor),)]
+          ),
         ),
         ..._eventsSelectedDay.map((event) => Card(child: Container(
           padding: EdgeInsets.all(12),
