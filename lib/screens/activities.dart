@@ -69,23 +69,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
               [Container(width: 12.0, height: 12.0, decoration: BoxDecoration(shape: BoxShape.circle, color:  Theme.of(context).primaryColor),)]
           ),
         ),
-        ..._eventsSelectedDay.map((event) => Card(child: Container(
-          padding: EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Row(children: [
-                Text(event['title']),
-                Spacer(),
-                Text(event['pratica'] ? 'Prática' : ''),
-              ],),
-              SizedBox(height: 12),
-              Row(children: [
-                Text(event['description'])
-              ],)
-            ]
-          )
-        ),)).toList()
-
+        ..._eventsSelectedDay.map((event) => _buildCardFromEvent(event)).toList()
       ],)
     );
   }
@@ -118,4 +102,24 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
       this._events = events;
     });
   }
+
+  _buildCardFromEvent(event) {
+    return Card(child: Container(
+      padding: EdgeInsets.all(12),
+      child: Column(
+        children: [
+          Row(children: [
+            Text(event['title']),
+            Spacer(),
+            Text(event['pratica'] ? 'Prática' : ''),
+          ],),
+          SizedBox(height: 12),
+          Row(children: [
+            Text(event['description'])
+          ],)
+        ]
+      )
+    ));
+  }
+
 }
