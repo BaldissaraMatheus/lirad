@@ -58,6 +58,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
             outsideHolidayStyle: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color.withOpacity(0.5)),
             todayColor: Theme.of(context).primaryColor.withOpacity(0.25),
           ),
+          rowHeight: 45,
           daysOfWeekStyle: DaysOfWeekStyle(
             weekdayStyle: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color.withOpacity(0.75)),
             weekendStyle: TextStyle(color: Theme.of(context).accentTextTheme.bodyText1.color.withOpacity(0.75))
