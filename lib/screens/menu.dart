@@ -11,7 +11,7 @@ class Menu extends StatelessWidget {
     var routes = [
       NamedRoutes.QUIZES,
       NamedRoutes.VIDEOS,
-      NamedRoutes.PAGINA_DO_LIGATE,
+      NamedRoutes.CALENDAR,
       NamedRoutes.LOGOUT,
     ];
     var accessibleRoutes = user.ligante == true
