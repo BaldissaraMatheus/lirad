@@ -61,7 +61,10 @@ class AuthService {
       'email': user.email,
       'photoURL': user.photoURL,
       'displayName': user.displayName,
-      'favoriteQuestions': user.favoriteQuestions
+      'favoriteQuestions': user.favoriteQuestions,
+      'praticas': user.praticas,
+      'ligante': user.ligante,
+      'extensionista': user.extensionista
     }, SetOptions(merge: true));
   }
 

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/models/lirad_user.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -12,11 +14,13 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   CalendarController _calendarController;
   Map<DateTime, List<dynamic>> _events;
  List<dynamic> _eventsSelectedDay = [];
+ LiradUser user;
 
 
   @override
   void initState() {
     super.initState();
+    this.user = Provider.of<LiradUser>(context, listen: false);
     initializeDateFormatting();
     _calendarController = CalendarController();
     _updateEvents();
@@ -79,7 +83,17 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   _updateEvents() async {
     Map<DateTime, List<dynamic>> events = {};
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('eventos').get();
-    qn.docs.forEach((doc) {
+    var docs = qn.docs;
+    if (!user.praticas) {
+      docs = docs.where((doc) => doc['pratica'] == false).toList();
+    }
+    if (!user.ligante) {
+      docs = docs.where((doc) => doc['restrictToLigantes'] == false).toList();
+    }
+    if (!user.extensionista) {
+      docs = docs.where((doc) => doc['restrictToExtensionistas'] == false).toList();
+    }
+    docs.forEach((doc) {
       var date = DateTime.parse((doc['date'] as Timestamp).toDate().toIso8601String().substring(0, 10));
       if (!events.keys.contains(date)) {
         events[date] = [];
