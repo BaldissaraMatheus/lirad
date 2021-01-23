@@ -13,8 +13,8 @@ class ActivitiesScreen extends StatefulWidget {
 class _ActivitiesScreenState extends State<ActivitiesScreen> {
   CalendarController _calendarController;
   Map<DateTime, List<dynamic>> _events;
- List<dynamic> _eventsSelectedDay = [];
- LiradUser user;
+  List<dynamic> _eventsSelectedDay = [];
+  LiradUser user;
 
 
   @override
@@ -72,7 +72,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
           ),
           builders: CalendarBuilders(
             markersBuilder: (context, date, events, holidays) =>
-              [Container(width: 12.0, height: 12.0, decoration: BoxDecoration(shape: BoxShape.circle, color:  Theme.of(context).primaryColor),)]
+              [Container(width: 12.0, height: 12.0, decoration: BoxDecoration(shape: BoxShape.circle, color:  Theme.of(context).primaryColor.withOpacity(0.9)),)]
           ),
         ),
         ..._eventsSelectedDay.map((event) => _buildCardFromEvent(event)).toList()
@@ -113,7 +113,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
       child: Column(
         children: [
           Row(children: [
-            Text(event['title']),
+            Text(event['title'], style: TextStyle(fontWeight: FontWeight.bold)),
             Spacer(),
             Text(event['pratica'] ? 'Prática' : ''),
           ],),

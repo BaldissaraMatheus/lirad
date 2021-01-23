@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 
 class LiradUser extends ChangeNotifier {
@@ -10,6 +11,7 @@ class LiradUser extends ChangeNotifier {
   bool praticas;
   bool ligante;
   bool extensionista;
+  FirebaseMessaging fm;
 
   LiradUser([this.uid, this.email, this.photoURL, this.displayName, this.favoriteQuestions, this.praticas, this.ligante, this.extensionista]);
 
@@ -56,5 +58,18 @@ class LiradUser extends ChangeNotifier {
 
   List<String> getFavoriteQuestions() {
     return this.favoriteQuestions;
+  }
+
+  void initializeFirebaseMessaging() {
+    this.fm = FirebaseMessaging(); 
+    if (this.ligante) {
+     this.fm.subscribeToTopic('ligantes');
+    }
+    if (this.extensionista) {
+     this.fm.subscribeToTopic('extensão');
+    }
+    if (this.praticas) {
+     this.fm.subscribeToTopic('pratica');
+    }
   }
 }

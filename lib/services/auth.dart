@@ -40,6 +40,7 @@ class AuthService {
       }
       LiradUser currUser = Provider.of<LiradUser>(context, listen: false);
       updateUserData(liradUser);
+      liradUser.initializeFirebaseMessaging();
       currUser.updateUser(liradUser);
 
       print("signed in " + liradUser.displayName);
