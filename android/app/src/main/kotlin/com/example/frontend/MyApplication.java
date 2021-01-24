@@ -4,20 +4,18 @@ import io.flutter.app.FlutterApplication;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
 import io.flutter.plugins.GeneratedPluginRegistrant;
-import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
-import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService;
 
-public class MyApplication extends FlutterApplication implements PluginRegistrantCallback {
+public class LiradApp extends FlutterApplication implements PluginRegistrantCallback {
   @Override
   public void onCreate() {
     super.onCreate();
-    FlutterFirebaseMessagingService.setPluginRegistrant(this);
+    FlutterFirebaseMessagingBackgroundService.setPluginRegistrant(this);
   }
 
   @Override
   public void registerWith(PluginRegistry registry) {
-    // https://stackoverflow.com/questions/59446933/pluginregistry-cannot-be-converted-to-flutterengine
-    FirebaseMessagingPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"));
-    // GeneratedPluginRegistrant.registerWith(registry);
+    GeneratedPluginRegistrant.registerWith(registry);
   }
 }
