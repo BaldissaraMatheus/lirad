@@ -10,8 +10,9 @@ class Menu extends StatelessWidget {
     LiradUser user = Provider.of<LiradUser>(context, listen: false);
     var routes = [
       NamedRoutes.QUIZES,
-      NamedRoutes.VIDEOS,
       NamedRoutes.CALENDAR,
+      NamedRoutes.CERTIFICADOS,
+      NamedRoutes.VIDEOS,
       NamedRoutes.LOGOUT,
     ];
     var accessibleRoutes = user.ligante == true

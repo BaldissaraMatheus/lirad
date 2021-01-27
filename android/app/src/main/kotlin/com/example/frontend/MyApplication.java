@@ -7,7 +7,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService;
 
-public class LiradApp extends FlutterApplication implements PluginRegistrantCallback {
+public class MyApplication extends FlutterApplication implements PluginRegistrantCallback {
   @Override
   public void onCreate() {
     super.onCreate();
@@ -16,6 +16,6 @@ public class LiradApp extends FlutterApplication implements PluginRegistrantCall
 
   @Override
   public void registerWith(PluginRegistry registry) {
-    GeneratedPluginRegistrant.registerWith(registry);
+    GeneratedPluginRegistrant.registerWith((FlutterEngine) registry);
   }
 }

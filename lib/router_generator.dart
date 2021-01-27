@@ -3,6 +3,7 @@ import 'package:frontend/screens/activities.dart';
 import 'package:frontend/screens/login.dart';
 import 'package:frontend/screens/logout.dart';
 import 'package:frontend/screens/video_list.dart';
+import 'package:frontend/screens/certificates.dart';
 
 import './screens/menu.dart';
 import 'screens/quiz_list.dart';
@@ -18,7 +19,8 @@ class RouterGenerator {
       '/videos': VideoListScreen(),
       '/logout': LogoutScreen(),
       '/login': LoginScreen(),
-      '/activities': ActivitiesScreen()
+      '/activities': ActivitiesScreen(),
+      '/certificates': CertificatesScreen()
     };
     Widget screen = routes[settings.name];
     return MaterialPageRoute(builder: (_) => screen);

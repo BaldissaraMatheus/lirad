@@ -61,7 +61,7 @@ class LiradUser extends ChangeNotifier {
   }
 
   void initializeFirebaseMessaging() {
-    this.fm = FirebaseMessaging.instance; 
+    this.fm = FirebaseMessaging.instance;
     if (this.ligante) {
      this.fm.subscribeToTopic('ligantes');
     }

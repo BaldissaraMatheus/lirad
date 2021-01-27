@@ -1,8 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/lirad_user.dart';
-import 'package:frontend/services/auth.dart';
 import 'package:provider/provider.dart';
 import './config/palette.dart';
 import 'router_generator.dart';
@@ -38,7 +36,7 @@ class LiradApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context) => LiradUser(),
+      create: (context) => LiradUser(),
       child: MaterialApp(
         theme: theme,
         initialRoute: '/login',
