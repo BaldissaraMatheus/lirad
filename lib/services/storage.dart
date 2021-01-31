@@ -13,4 +13,8 @@ class StorageService {
   Future<FullMetadata> findFileMetadataByFilePath(String path) {
     return FirebaseStorage.instance.ref(path).getMetadata();
   }
+
+  Future<String> findDownloadUrlByFilePath(String path) {
+    return FirebaseStorage.instance.ref(path).getDownloadURL().catchError((err) => print(err));
+  }
 }

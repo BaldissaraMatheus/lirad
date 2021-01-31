@@ -1,7 +1,12 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/services/storage.dart';
+import 'package:frontend/services/localNotification.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class CertificatesScreen extends StatefulWidget {
@@ -11,22 +16,24 @@ class CertificatesScreen extends StatefulWidget {
 
 class _CertificatesScreenState extends State<CertificatesScreen> {
   List<FullMetadata> _certificates;
+  PermissionStatus _permissionStatus;
+  LocalNotificationService _localNotificationService = LocalNotificationService.instance;
+  Dio _dio = Dio();
 
   @override
   void initState() {
-    print('alo porra');
     LiradUser user = Provider.of<LiradUser>(context, listen: false);
     _getCertificatesList(user);
   }
 
   void _getCertificatesList(LiradUser user) async {
     List<String> filesFullPath = await StorageService.instance.findAllFilesReferenceByUserEmail(user.email);
-    filesFullPath.forEach((element) {print(element);});
     var certificates = await Future.wait(filesFullPath.map((path) => StorageService.instance.findFileMetadataByFilePath(path)).toList());
     setState(() {
       _certificates = certificates;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,27 +54,46 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
     );
   }
 
+
   Widget _buildCertificateCard(FullMetadata certificate) {
-    return Card(child: Container(
-      padding: EdgeInsets.all(12),
-      child: Column(
-        children: [
-          Row(children: [
-            Text(certificate.name, style: TextStyle(fontWeight: FontWeight.bold)),
-            // Spacer(),
-            // Text(event['pratica'] ? 'Prática' : ''),
-          ],),
-        //   Row(children: [
-        //     Text(horario)
-        //   ],),
-        //   SizedBox(height: 12),
-        //   Row(
-        //     children: [
-        //       Flexible(child: Text(event['description'])) 
-        //     ],
-          // )
-        ]
-      )
-    ));
+    return GestureDetector(
+      onTap: () async {
+        final permission = await this._requestPermission();
+        if (permission != PermissionStatus.granted) {
+          return;
+        }
+        final url = await StorageService.instance.findDownloadUrlByFilePath(certificate.fullPath);
+        final baseDir = await getExternalStorageDirectory();
+        final certificadosPath = await new Directory(baseDir.path + '/certificados').create(recursive: true).then((dir) => dir.path);
+        final filePath = '$certificadosPath/${certificate.name}';
+        await _dio.download(url, filePath, onReceiveProgress: (rec, total) => {
+          print('${(rec/total * 100).truncate()}%'),
+        }).then((res) {
+          _localNotificationService.showNotification('Arquivo baixado: ${certificate.name}', '', filePath);
+        })
+        .catchError((err) => print(err));
+      },
+      child: Card(child: Container(
+        padding: EdgeInsets.all(12),
+        child: Column(
+          children: [
+            Row(children: [
+              Text(certificate.name, style: TextStyle(fontWeight: FontWeight.bold)),
+            ],),
+          ]
+        ),
+      )),
+    ) ;
+  }
+
+  Future<PermissionStatus> _requestPermission() async {
+    if (this._permissionStatus == PermissionStatus.granted) {
+      return this._permissionStatus;
+    }
+    final status = await Permission.storage.request();
+    setState(() {
+      this._permissionStatus = status;
+    });
+    return status;
   }
 }

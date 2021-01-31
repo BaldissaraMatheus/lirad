@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:frontend/services/localNotification.dart';
 
 class LiradUser extends ChangeNotifier {
   String uid;
@@ -11,7 +12,7 @@ class LiradUser extends ChangeNotifier {
   bool praticas;
   bool ligante;
   bool extensionista;
-  FirebaseMessaging fm;
+  FirebaseMessaging _fm;
 
   LiradUser([this.uid, this.email, this.photoURL, this.displayName, this.favoriteQuestions, this.praticas, this.ligante, this.extensionista]);
 
@@ -61,15 +62,17 @@ class LiradUser extends ChangeNotifier {
   }
 
   void initializeFirebaseMessaging() {
-    this.fm = FirebaseMessaging.instance;
+    // https://pub.dev/packages/firebase_messaging
+    // FirebaseMessaging.onBackgroundMessage((message) => MessagingService().myBackgroundMessageHandler(message));
+    this._fm = FirebaseMessaging.instance;
     if (this.ligante) {
-     this.fm.subscribeToTopic('ligantes');
+     this._fm.subscribeToTopic('ligantes');
     }
     if (this.extensionista) {
-     this.fm.subscribeToTopic('extensão');
+     this._fm.subscribeToTopic('extensão');
     }
     if (this.praticas) {
-     this.fm.subscribeToTopic('pratica');
+     this._fm.subscribeToTopic('pratica');
     }
   }
 }
