@@ -5,10 +5,10 @@ import 'package:frontend/models/channel.dart';
 import 'package:frontend/models/video.dart';
 import 'package:http/http.dart' as http;
 
-class APIService {
-  APIService._instantiate();
+class YoutubeService {
+  YoutubeService._instantiate();
 
-  static final APIService instance = APIService._instantiate();
+  static final YoutubeService instance = YoutubeService._instantiate();
 
   final String _baseUrl = 'www.googleapis.com';
   String _nextPageToken = '';

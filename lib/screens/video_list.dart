@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/channel.dart';
 import 'package:frontend/models/video.dart';
 import 'package:frontend/screens/video.dart';
-import 'package:frontend/services/api.dart';
+import 'package:frontend/services/youtube.dart';
 
 class VideoListScreen extends StatefulWidget {
   @override
@@ -23,7 +23,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
   void _initChannel() async {
     // const channelId = 'UCJpEFCR8MotUFb5vLk8TvGw';
     const channelId = 'UCzCWehBejA23yEz3zp7jlcg';
-    Channel channel = await APIService.instance
+    Channel channel = await YoutubeService.instance
       .fetchChannel(channelId: channelId);
     setState(() {
       _channel = channel;
@@ -169,7 +169,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
 
   _loadMoreVideos() async {
     _isLoading = true;
-    List<Video> moreVideos = await APIService.instance
+    List<Video> moreVideos = await YoutubeService.instance
         .fetchVideosFromPlaylist(playlistId: _channel.uploadPlaylistId);
     List<Video> allVideos = _channel.videos..addAll(moreVideos);
     setState(() {
