@@ -1,10 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class BlogPost {
   String title;
-  DateTime lastUpdate;
+  String lastUpdate;
   String link;
   String img;
 
-  BlogPost(this.title, this.lastUpdate, this.link, this.img);
+  BlogPost(this.title, DateTime lastUpdate, this.link, this.img) {
+    this.lastUpdate = new DateFormat('dd/MM/yyyy').format(lastUpdate);
+  }
 }

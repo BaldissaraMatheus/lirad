@@ -23,7 +23,7 @@ class _BlogScreenState extends State<BlogScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: Text('Certificados'),
+        title: Text('Blog'),
       ),
       body: _posts != null
         ? ListView(children: _posts.map((post) => _buildPostCard(post, context)).toList())
@@ -38,19 +38,29 @@ class _BlogScreenState extends State<BlogScreen> {
   }
 
   Widget _buildPostCard(BlogPost post, context) {
-    print(post.title);
     return GestureDetector(
       onTap: () { _launchURL(post.link); },
-      child: Card(
-        child: Container(
-          child: Column(
-            children: [
-              Row(children: [Text(post.title)]),
-              CachedNetworkImage(imageUrl: post.img)
-            ],
+      child: Container(
+        margin: EdgeInsets.all(12),
+        child: Card(
+          child: Container(
+            margin: EdgeInsets.all(12),
+            child: Column(
+              children: [
+                CachedNetworkImage(imageUrl: post.img),
+                Container(
+                  margin: EdgeInsets.only(top: 12),
+                  child: Column(children: [
+                    Row(children: [Text(post.title, style: TextStyle(fontSize: 16))]),
+                    // Row(children: [Text('${post.lastUpdate.day}/${post.lastUpdate.month}/${post.lastUpdate.year}')])
+                    Row(children: [Text(post.lastUpdate.toString())])
+                  ]),
+                )
+              ],
+            ),
           ),
         ),
-      ),
+      )
     );
   }
     
@@ -80,7 +90,6 @@ class _BlogScreenState extends State<BlogScreen> {
   }
 
   _launchURL(String url) async {
-    print('entrou');
     if (await canLaunch(url)) {
       await launch(url);
     } else {
