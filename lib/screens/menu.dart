@@ -12,6 +12,7 @@ class Menu extends StatelessWidget {
       NamedRoutes.QUIZES,
       NamedRoutes.CALENDAR,
       NamedRoutes.CERTIFICADOS,
+      NamedRoutes.BLOG,
       NamedRoutes.VIDEOS,
       NamedRoutes.LOGOUT,
     ];

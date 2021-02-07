@@ -8,4 +8,5 @@ class NamedRoutes {
   static var VIDEOS = Route('/videos', 'Vídeos', false);
   static var CERTIFICADOS = Route('/certificates', 'Certificados', true);
   static var CALENDAR = Route('/activities', 'Calendário de Atividades', false);
+  static var BLOG = Route('/blog', 'Blog', false);
 }

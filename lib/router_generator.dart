@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/activities.dart';
+import 'package:frontend/screens/blog.dart';
 import 'package:frontend/screens/login.dart';
 import 'package:frontend/screens/logout.dart';
 import 'package:frontend/screens/video_list.dart';
@@ -20,7 +21,8 @@ class RouterGenerator {
       '/logout': LogoutScreen(),
       '/login': LoginScreen(),
       '/activities': ActivitiesScreen(),
-      '/certificates': CertificatesScreen()
+      '/certificates': CertificatesScreen(),
+      '/blog': BlogScreen() 
     };
     Widget screen = routes[settings.name];
     return MaterialPageRoute(builder: (_) => screen);
