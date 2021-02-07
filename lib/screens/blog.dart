@@ -52,7 +52,6 @@ class _BlogScreenState extends State<BlogScreen> {
                   margin: EdgeInsets.only(top: 12),
                   child: Column(children: [
                     Row(children: [Text(post.title, style: TextStyle(fontSize: 16))]),
-                    // Row(children: [Text('${post.lastUpdate.day}/${post.lastUpdate.month}/${post.lastUpdate.year}')])
                     Row(children: [Text(post.lastUpdate.toString())])
                   ]),
                 )
@@ -76,7 +75,7 @@ class _BlogScreenState extends State<BlogScreen> {
     final doc = XmlDocument.parse(res.body);
     final posts = doc.findAllElements('item');
     setState(() {
-      _posts = posts.map((post) {
+      final blogPosts = posts.map((post) {
         final title = post.findAllElements('title').first.text;
         final date = post.findAllElements('atom:updated').first.text;
         final link = post.findAllElements('guid').first.text;
@@ -86,6 +85,8 @@ class _BlogScreenState extends State<BlogScreen> {
         final img = src.substring(5, src.length - 1);
         return BlogPost(title, DateTime.parse(date), link, img);
       }).toList();
+      blogPosts.sort((a, b) => a.getUnparsedLastUpdate().isAfter(b.getUnparsedLastUpdate()) ? 0 : 1);
+      _posts = blogPosts;
     });
   }
 
