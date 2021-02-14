@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/models/quiz.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
+import 'package:frontend/services/auth.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class QuizScreen extends StatefulWidget {
@@ -17,8 +20,16 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
+  LiradUser user;
+  bool isQuestionFavorite;
   final dataKey = new GlobalKey();
   int selectedOptionIndex;
+
+  @override
+  void initState() {
+    this.user = Provider.of<LiradUser>(context, listen: false);
+    this.updateIsFavorite();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +41,16 @@ class _QuizScreenState extends State<QuizScreen> {
           backgroundColor: Theme.of(context).backgroundColor,
           appBar: AppBar(
             title: Text(widget.quizes[widget.index].title),
+            actions: [
+              IconButton(
+                icon: Icon(isQuestionFavorite ? Icons.favorite : Icons.favorite_outline),
+                onPressed: () {
+                  setFavorite(!this.isQuestionFavorite); 
+                })
+            ],
+            leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
+              Navigator.pushNamed(context, '/quizes');
+            }),
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(20),
@@ -37,20 +58,9 @@ class _QuizScreenState extends State<QuizScreen> {
               alignment: Alignment.center,
               child: Column(children: <Widget>[
                 this._buildQuestionText(widget.quizes[widget.index].question),
-                // Text(widget.question, style: TextStyle(fontSize: 16,),),
                 ...widget.quizes[widget.index].options.map((option) => 
                   this._buildRaisedButton(option.description, widget.quizes[widget.index].options.indexOf(option))),
                 Container(margin: EdgeInsets.only(top: 12), child: this._getSendButton()),
-                // Container(margin: EdgeInsets.only(top: 12, bottom: 12), child: Text(widget.reference, style: TextStyle(fontSize: 12,),),),
-                // Expanded(
-                //   child: Align(
-                //     alignment: FractionalOffset.bottomCenter,
-                //     child: MaterialButton(
-                //       onPressed: () => {},
-                //       child: this._buildRaisedButton('Enviar')
-                //     ),
-                //   ),
-                // ),
               ],),
             )
           ),
@@ -176,6 +186,7 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {
       widget.index += operand;
     });
+    this.updateIsFavorite();
   }
   bool _isQuizIndexFirst() {
     return widget.index == 0;
@@ -185,5 +196,26 @@ class _QuizScreenState extends State<QuizScreen> {
   }
   void resetState() {
     this.selectedOptionIndex = null;
+  }
+  void updateIsFavorite() {
+    setState(() {
+      final title = widget.quizes[widget.index].title;
+      this.isQuestionFavorite = user.favoriteQuestions.indexOf(title) != -1;  
+    });
+    
+  }
+  void setFavorite(bool favorite) {
+    setState(() {
+      this.isQuestionFavorite = favorite;
+    });
+    final favorites = this.user.favoriteQuestions;
+    final favoriteTitle = widget.quizes[widget.index].title;
+    if (favorite) {
+      favorites.add(favoriteTitle);
+    } else {
+      favorites.removeWhere((title) => title == favoriteTitle);
+    }
+    user.setFavoriteQuestions(favorites);
+    authService.updateUserData(user);
   }
 }

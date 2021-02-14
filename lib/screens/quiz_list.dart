@@ -17,7 +17,6 @@ class QuizList extends StatefulWidget {
 }
 
 class _QuisListState extends State<QuizList> {
-
   // https://stackoverflow.com/questions/61884007/how-to-stop-setstate-when-called-from-displaying-black-screen-with-loading-widge
   Future<List<dynamic>> futureItemsList;
   List<dynamic> itemsList;
@@ -36,13 +35,10 @@ class _QuisListState extends State<QuizList> {
   void initState() {
     super.initState();
     this.user = Provider.of<LiradUser>(context, listen: false);
-    print(this.user.displayName);
-    print(this.user.uid);
-    futureItemsList = this.getItems().then((value) =>
-      this.favorites = this.quizList.where((quiz) =>
-        this.user.favoriteQuestions.contains(quiz.title)
-      ).toList()
-    );
+    futureItemsList = this.getItems().then((value) {
+      this._updateFavorites();
+      return value;
+    });
   }
 
   @override
@@ -190,7 +186,7 @@ class _QuisListState extends State<QuizList> {
     }
   }
   _createQuizButton(Quiz quiz) {
-    var isQuizFavorite = this.favorites.indexOf(quiz) != -1;
+    var isQuizFavorite = this.user.favoriteQuestions.indexOf(quiz.title) != -1;
     var onPressedFn = isQuizFavorite ? this._removeFavorite : this._addFavorite;
     var favoriteBtn = IconButton(icon: Icon(
       isQuizFavorite ? Icons.favorite : Icons.favorite_outline,
@@ -211,7 +207,7 @@ class _QuisListState extends State<QuizList> {
       child: maxWidthSizedBox,
       color: bgColor,
       textColor: textColor,
-      onPressed: () => Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(sequenceList, initialPosition)),
+      onPressed: () => Navigator.of(context).pushReplacementNamed('/quizes/quiz', arguments: new QuizScreenArguments(sequenceList, initialPosition)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0),
         side: BorderSide(color: bgColor)
@@ -282,6 +278,13 @@ class _QuisListState extends State<QuizList> {
   void _updateSelectedFilter(String filter) {
     setState(() {
       this.selectedFilter = filter;
+    });
+  }
+
+  void _updateFavorites() {
+    setState(() {
+      final isQuestionFavorite = (String title) => this.user.favoriteQuestions.contains(title); 
+      this.favorites = this.quizList.where((quiz) => isQuestionFavorite(quiz.title)).toList();
     });
   }
 }
