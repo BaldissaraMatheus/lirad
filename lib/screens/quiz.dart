@@ -49,7 +49,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 })
             ],
             leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
-              Navigator.pushNamed(context, '/quizes');
+              Navigator.pushReplacementNamed(context, '/quizes');
             }),
           ),
           body: SingleChildScrollView(
