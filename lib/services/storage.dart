@@ -6,7 +6,7 @@ class StorageService {
   static final StorageService instance = StorageService._instantiate();
 
   Future<List<String>> findAllFilesReferenceByUserEmail(String email) async {
-    var references = await FirebaseStorage.instance.ref('certificados/$email').listAll().then((result) => result.items);
+    final references = await FirebaseStorage.instance.ref('certificados/$email').listAll().then((result) => result.items);
     return references.map((reference) => reference.fullPath).toList();
   }
 
@@ -16,5 +16,9 @@ class StorageService {
 
   Future<String> findDownloadUrlByFilePath(String path) {
     return FirebaseStorage.instance.ref(path).getDownloadURL().catchError((err) => print(err));
+  }
+  
+  Future<String> findImageUrlByName(String name) async {
+    return FirebaseStorage.instance.ref('imagens/$name').getDownloadURL().catchError((err) => print(err));
   }
 }
