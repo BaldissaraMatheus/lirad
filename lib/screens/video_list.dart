@@ -21,8 +21,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
   }
 
   void _initChannel() async {
-    // const channelId = 'UCJpEFCR8MotUFb5vLk8TvGw';
-    const channelId = 'UCzCWehBejA23yEz3zp7jlcg';
+    const channelId = 'UCJpEFCR8MotUFb5vLk8TvGw';
     Channel channel = await YoutubeService.instance
       .fetchChannel(channelId: channelId);
     setState(() {
