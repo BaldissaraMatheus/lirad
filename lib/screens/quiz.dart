@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/models/quiz.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
 import 'package:frontend/services/auth.dart';
+import 'package:frontend/services/storage.dart';
 import 'package:provider/provider.dart';
+import 'package:styled_text/styled_text.dart';
 
 // ignore: must_be_immutable
 class QuizScreen extends StatefulWidget {
@@ -57,7 +60,7 @@ class _QuizScreenState extends State<QuizScreen> {
             child: Align(
               alignment: Alignment.center,
               child: Column(children: <Widget>[
-                this._buildQuestionText(widget.quizes[widget.index].question),
+                ...this._buildQuestionText(widget.quizes[widget.index].question),
                 ...widget.quizes[widget.index].options.map((option) => 
                   this._buildRaisedButton(option.description, widget.quizes[widget.index].options.indexOf(option))),
                 Container(margin: EdgeInsets.only(top: 12), child: this._getSendButton()),
@@ -150,29 +153,39 @@ class _QuizScreenState extends State<QuizScreen> {
   SizedBox _getMaxWidthChild(String text) {
     return SizedBox(width: double.infinity, child: Text(text, textAlign: TextAlign.center,),);
   }
-  RichText _buildQuestionText(String question) {
-    var questionWithLineBreaks = question.replaceAll("\\n", "\n");
-    var questionList = questionWithLineBreaks.split('_');
-    // https://stackoverflow.com/a/622001
-    var isEven = true;
-    var italicPortion = questionList.where((element) => isEven = !isEven).toList();
-    isEven = false;
-    var notItalicPortion = questionList.where((element) => isEven = !isEven).toList(); 
-    var newList = new List<TextSpan>();
-    for (int i = 0; i < notItalicPortion.length - 1; i++) {
-      newList.add(new TextSpan(text: notItalicPortion[i]));
-      newList.add(new TextSpan(text: italicPortion[i], style: TextStyle(fontStyle: FontStyle.italic)));
+  List<Widget> _buildQuestionText(String question) {
+    final questionWithLineBreaks = question.replaceAll("\\n", "\n");
+    final matchImgTag = RegExp('(?<=<img>)(.*?)(?=</img>)');
+    final imgs = matchImgTag
+      .allMatches(questionWithLineBreaks)
+      .map((match) => match.group(0));
+    if (imgs.isEmpty) {
+      return [_buildFormatedText(questionWithLineBreaks)];
     }
-    newList.add(new TextSpan(text: notItalicPortion[notItalicPortion.length - 1]));
-
-    var text = new RichText(
-      text: TextSpan(
-        style: TextStyle(fontSize: 16, color: Colors.black, ),
-        children: newList
-      )
+    var lastQuestionSplitPart;
+    final questionParts = [];
+    imgs.forEach((element) async {
+      final splittedQuestion = questionWithLineBreaks.split(element);
+      final formatedText = _buildFormatedText(splittedQuestion[0]);
+      questionParts.add(formatedText);
+      lastQuestionSplitPart = splittedQuestion[1];
+      final downloadUrlImageLink = await StorageService.instance.findImageUrlByName(element);
+      final cachedImage = CachedNetworkImage(imageUrl: downloadUrlImageLink);
+      questionParts.add(cachedImage);
+    });
+    final formatedText = _buildFormatedText(lastQuestionSplitPart);
+    questionParts.add(formatedText);
+    return questionParts; 
+  }
+  StyledText _buildFormatedText(String text) {
+    return StyledText(
+      text: text,
+      styles: {
+        'bold': TextStyle(fontWeight: FontWeight.bold),
+        'italic': TextStyle(fontStyle: FontStyle.italic),
+      },
+      newLineAsBreaks: true,
     );
-    // print(questionList);
-    return text;
   }
   void _onBottomNavigationBarItemTapped(int value) {
     this.resetState();
