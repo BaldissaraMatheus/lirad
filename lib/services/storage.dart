@@ -19,6 +19,10 @@ class StorageService {
   }
   
   Future<String> findImageUrlByName(String name) async {
-    return FirebaseStorage.instance.ref('imagens/$name').getDownloadURL().catchError((err) => print(err));
+    return FirebaseStorage.instance
+      .ref('imagens/$name')
+      .getDownloadURL()
+      .then((url) => url.replaceFirst(RegExp('imagens/'), 'imagens%2F'))
+      .catchError((err) => print(err));
   }
 }

@@ -27,11 +27,13 @@ class _QuizScreenState extends State<QuizScreen> {
   bool isQuestionFavorite;
   final dataKey = new GlobalKey();
   int selectedOptionIndex;
+  Future<List<Widget>> questionText;
 
   @override
   void initState() {
     this.user = Provider.of<LiradUser>(context, listen: false);
     this.updateIsFavorite();
+    this.updateQuestionText();    
   }
 
   @override
@@ -59,12 +61,25 @@ class _QuizScreenState extends State<QuizScreen> {
             padding: EdgeInsets.all(20),
             child: Align(
               alignment: Alignment.center,
-              child: Column(children: <Widget>[
-                ...this._buildQuestionText(widget.quizes[widget.index].question),
-                ...widget.quizes[widget.index].options.map((option) => 
-                  this._buildRaisedButton(option.description, widget.quizes[widget.index].options.indexOf(option))),
-                Container(margin: EdgeInsets.only(top: 12), child: this._getSendButton()),
-              ],),
+              child: FutureBuilder<List<Widget>>(
+                  future: this.questionText,
+                  builder: (_, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return Center(
+                        child: Text('Loading'),
+                      );
+                    } else {
+                      List<Widget> questionText = snapshot.data;
+                      return Column(children: [
+                        ...questionText,
+                        ...widget.quizes[widget.index].options.map((option) => 
+                          this._buildRaisedButton(option.description, widget.quizes[widget.index].options.indexOf(option))
+                        ),
+                        Container(margin: EdgeInsets.only(top: 12), child: this._getSendButton()),
+                      ]);
+                    }
+                  }
+                ),
             )
           ),
           bottomNavigationBar: BottomNavigationBar(
@@ -97,7 +112,7 @@ class _QuizScreenState extends State<QuizScreen> {
     var rightAnswer = widget.quizes[widget.index].options[widget.quizes[widget.index].answer];
     var isSelectedAnswerCorrect = selectedOption == rightAnswer ? 'Resposta correta!' : 'Resposta errada!';
     var color = !isAnyOptionSelected
-      ? Theme.of(context).primaryColor
+      ? Colors.grey.shade400
       : Theme.of(context).accentColor;
     var textColor = !isAnyOptionSelected
       ? Theme.of(context).primaryTextTheme.bodyText1.color
@@ -153,7 +168,7 @@ class _QuizScreenState extends State<QuizScreen> {
   SizedBox _getMaxWidthChild(String text) {
     return SizedBox(width: double.infinity, child: Text(text, textAlign: TextAlign.center,),);
   }
-  List<Widget> _buildQuestionText(String question) {
+  Future<List<Widget>> _buildQuestionText(String question) async {
     final questionWithLineBreaks = question.replaceAll("\\n", "\n");
     final matchImgTag = RegExp('(?<=<img>)(.*?)(?=</img>)');
     final imgs = matchImgTag
@@ -163,19 +178,19 @@ class _QuizScreenState extends State<QuizScreen> {
       return [_buildFormatedText(questionWithLineBreaks)];
     }
     var lastQuestionSplitPart;
-    final questionParts = [];
-    imgs.forEach((element) async {
-      final splittedQuestion = questionWithLineBreaks.split(element);
-      final formatedText = _buildFormatedText(splittedQuestion[0]);
+    List<Widget> questionParts = [];
+    for (var img in imgs) {
+      final splittedQuestion = questionWithLineBreaks.split(img);
+      final formatedText = _buildFormatedText(splittedQuestion[0].replaceFirst('<img>', '\n'));
       questionParts.add(formatedText);
-      lastQuestionSplitPart = splittedQuestion[1];
-      final downloadUrlImageLink = await StorageService.instance.findImageUrlByName(element);
+      lastQuestionSplitPart = '\n${splittedQuestion[1]}';
+      final downloadUrlImageLink = await StorageService.instance.findImageUrlByName(img);
       final cachedImage = CachedNetworkImage(imageUrl: downloadUrlImageLink);
       questionParts.add(cachedImage);
-    });
+    }
     final formatedText = _buildFormatedText(lastQuestionSplitPart);
     questionParts.add(formatedText);
-    return questionParts; 
+    return Future.value(questionParts);
   }
   StyledText _buildFormatedText(String text) {
     return StyledText(
@@ -188,7 +203,6 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
   void _onBottomNavigationBarItemTapped(int value) {
-    this.resetState();
     if (value == 0 && this._isQuizIndexFirst()) {
       return;
     }
@@ -199,7 +213,9 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() {
       widget.index += operand;
     });
+    this.selectedOptionIndex = null;
     this.updateIsFavorite();
+    this.updateQuestionText();
   }
   bool _isQuizIndexFirst() {
     return widget.index == 0;
@@ -207,8 +223,10 @@ class _QuizScreenState extends State<QuizScreen> {
   bool _isQuizIndexLast() {
     return widget.index == widget.quizes.length - 1;
   }
-  void resetState() {
-    this.selectedOptionIndex = null;
+  void updateQuestionText() {
+    setState(() {
+      this.questionText = _buildQuestionText(widget.quizes[widget.index].question);
+    });
   }
   void updateIsFavorite() {
     setState(() {
