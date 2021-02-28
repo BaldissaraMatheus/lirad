@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/lirad_user.dart';
+import 'package:frontend/services/auth.dart';
 import 'package:provider/provider.dart';
 import './config/palette.dart';
 import 'router_generator.dart';
@@ -35,11 +36,13 @@ void main(List<String> args) async {
 class LiradApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final user = authService.currentUser;
+    final route = user.email == null ? '/login' : '/';
     return ChangeNotifierProvider(
-      create: (context) => LiradUser(),
+      create: (context) => user,
       child: MaterialApp(
         theme: theme,
-        initialRoute: '/login',
+        initialRoute: route,
         onGenerateRoute: RouterGenerator.generate,
       )
     );

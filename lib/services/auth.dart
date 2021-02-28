@@ -11,12 +11,11 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: []);
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Stream<LiradUser> get user {
-    return _auth.authStateChanges().map(
-      (User user) => user == null
-        ? LiradUser.fromUser(user)
-        : null
-    );
+  LiradUser get currentUser {
+    if (_auth.currentUser == null) {
+      return LiradUser();
+    }
+    return LiradUser.fromUser(_auth.currentUser);
   }
 
   Future<User> googleSignIn(context) async {
