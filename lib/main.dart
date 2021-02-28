@@ -30,13 +30,17 @@ void main(List<String> args) async {
   // https://stackoverflow.com/questions/57689492/flutter-unhandled-exception-servicesbinding-defaultbinarymessenger-was-accesse
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(LiradApp());
+  final user = await authService.currentUser;
+  runApp(LiradApp(user));
 }
 
 class LiradApp extends StatelessWidget {
+  LiradUser user;
+
+  LiradApp(this.user);
+
   @override
   Widget build(BuildContext context) {
-    final user = authService.currentUser;
     final route = user.email == null ? '/login' : '/';
     return ChangeNotifierProvider(
       create: (context) => user,

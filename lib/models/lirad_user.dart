@@ -29,7 +29,6 @@ class LiradUser extends ChangeNotifier {
     );
   }
 
-// TODO corrigir isso aqui
   factory LiradUser.fromUser(User user) {
     return LiradUser(
       user.uid,
