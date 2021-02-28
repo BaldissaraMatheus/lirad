@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/services/storage.dart';
 import 'package:frontend/services/localNotification.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -62,14 +63,20 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
         if (permission != PermissionStatus.granted) {
           return;
         }
-        final url = await StorageService.instance.findDownloadUrlByFilePath(certificate.fullPath);
         final baseDir = await getExternalStorageDirectory();
-        final certificadosPath = await new Directory(baseDir.path + '/certificados').create(recursive: true).then((dir) => dir.path);
-        final filePath = '$certificadosPath/${certificate.name}';
+        final certificadosDirectory = await new Directory(baseDir.path + '/certificados').create(recursive: true).then((dir) => dir.path);
+        final filePath = '$certificadosDirectory/${certificate.name}';
+        final fileExists = await File(filePath).exists();
+        if (fileExists) {
+          return OpenFile.open(filePath).then((value) => value.message);
+        }
+        _localNotificationService.showNotification('Baixando arquivo: ${certificate.name}');
+        final url = await StorageService.instance.findDownloadUrlByFilePath(certificate.fullPath);
         await _dio.download(url, filePath, onReceiveProgress: (rec, total) => {
           print('${(rec/total * 100).truncate()}%'),
         }).then((res) {
           _localNotificationService.showNotification('Arquivo baixado: ${certificate.name}', '', filePath);
+          OpenFile.open(filePath).then((value) => value.message);
         })
         .catchError((err) => print(err));
       },
