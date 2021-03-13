@@ -82,9 +82,10 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
       },
       child: Card(child: Container(
         padding: EdgeInsets.all(12),
-        child: Column(
+        child: Row(
           children: [
-            Row(children: [
+            Container(child: Icon(Icons.filter_frames_rounded), margin: EdgeInsets.only(right: 12),),
+            Column(children: [
               Text(certificate.name, style: TextStyle(fontWeight: FontWeight.bold)),
             ],),
           ]
