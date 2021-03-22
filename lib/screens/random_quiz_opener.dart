@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/quiz.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
@@ -42,6 +39,6 @@ class _RandomQuizOpenerState extends State<RandomQuizOpener> {
       .map((doc) => new Quiz.fromMap(doc.data()))
       .toList()
       ..shuffle();
-    Navigator.of(context).popAndPushNamed('/quizes/quiz', arguments: new QuizScreenArguments(quizes, 0));
+    Navigator.of(context).popAndPushNamed('/quizes/quiz', arguments: new QuizScreenArguments(quizes, 0, '/'));
   }
 }

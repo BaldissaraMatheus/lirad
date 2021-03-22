@@ -9,4 +9,5 @@ class NamedRoutes {
   static var CERTIFICADOS = Route('/certificates', 'Certificados', true);
   static var CALENDAR = Route('/activities', 'Calendário de Atividades', false);
   static var BLOG = Route('/blog', 'Blog', false);
+  static var RANDOM_QUIZES = Route('/quizes/random', 'Questões', false);
 }

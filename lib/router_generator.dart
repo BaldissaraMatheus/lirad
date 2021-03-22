@@ -3,6 +3,7 @@ import 'package:frontend/screens/activities.dart';
 import 'package:frontend/screens/blog.dart';
 import 'package:frontend/screens/login.dart';
 import 'package:frontend/screens/logout.dart';
+import 'package:frontend/screens/random_quiz_opener.dart';
 import 'package:frontend/screens/video_list.dart';
 import 'package:frontend/screens/certificates.dart';
 
@@ -22,18 +23,10 @@ class RouterGenerator {
       '/login': LoginScreen(),
       '/activities': ActivitiesScreen(),
       '/certificates': CertificatesScreen(),
-      '/blog': BlogScreen() 
+      '/blog': BlogScreen(),
+      '/quizes/random': RandomQuizOpener(),
     };
     Widget screen = routes[settings.name];
     return MaterialPageRoute(builder: (_) => screen);
-  }
-}
-
-class AuthenticationWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      
-    );
   }
 }

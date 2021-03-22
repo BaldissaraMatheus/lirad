@@ -30,6 +30,7 @@ class _QuisListState extends State<QuizList> {
   String selectedFilter = 'Simulados';
   bool loadRandomOrder = false;
   LiradUser user;
+  String initialRoute = '/quizes';
 
   @override
   void initState() {
@@ -46,7 +47,10 @@ class _QuisListState extends State<QuizList> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: Text('Lista de simulados e questões')
+        title: Text('Lista de simulados e questões'),
+        leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
+          Navigator.pushReplacementNamed(context, '/');
+        }),
       ),
       body: Container(
         width: double.infinity,
@@ -207,7 +211,7 @@ class _QuisListState extends State<QuizList> {
       child: maxWidthSizedBox,
       color: bgColor,
       textColor: textColor,
-      onPressed: () => Navigator.of(context).pushReplacementNamed('/quizes/quiz', arguments: new QuizScreenArguments(sequenceList, initialPosition)),
+      onPressed: () => Navigator.of(context).pushReplacementNamed('/quizes/quiz', arguments: new QuizScreenArguments(sequenceList, initialPosition, this.initialRoute)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0),
         side: BorderSide(color: bgColor)
@@ -227,7 +231,7 @@ class _QuisListState extends State<QuizList> {
       child: maxWidthSizedBox,
       color: bgColor,
       textColor: textColor,
-      onPressed: () => Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(sequenceList, 0)),
+      onPressed: () => Navigator.of(context).pushNamed('/quizes/quiz', arguments: new QuizScreenArguments(sequenceList, 0, this.initialRoute)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0),
         side: BorderSide(color: bgColor)

@@ -12,10 +12,12 @@ import 'package:styled_text/styled_text.dart';
 class QuizScreen extends StatefulWidget {
   List<Quiz> quizes;
   int index;
+  String initialRoute;
 
   QuizScreen(QuizScreenArguments args) {
     this.quizes = args.quizes;
     this.index = args.index;
+    this.initialRoute = args.initialRoute;
   }
   
   @override
@@ -54,7 +56,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 })
             ],
             leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
-              Navigator.pushReplacementNamed(context, '/quizes');
+              Navigator.pushReplacementNamed(context, widget.initialRoute);
             }),
           ),
           body: SingleChildScrollView(
