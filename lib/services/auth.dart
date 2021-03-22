@@ -66,8 +66,10 @@ class AuthService {
     }, SetOptions(merge: true));
   }
 
-  void signOut(context) {
-    _auth.signOut();
+  Future<void> signOut(context) async {
+    final logOuts = List<Future>();
+    logOuts.add(_auth.signOut());
+    logOuts.add(_googleSignIn.disconnect());
     Navigator.of(context).pushReplacementNamed('/login');
   }
 }
