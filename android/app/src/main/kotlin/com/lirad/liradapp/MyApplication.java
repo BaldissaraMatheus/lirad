@@ -6,6 +6,7 @@ import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService;
+import com.facebook.FacebookSdk;
 
 public class MyApplication extends FlutterApplication implements PluginRegistrantCallback {
   @Override
