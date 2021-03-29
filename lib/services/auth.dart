@@ -43,11 +43,9 @@ class AuthService {
       print("signed in " + liradUser.displayName);
       Navigator.of(context).pushReplacementNamed('/');
       return user;
-
     } on PlatformException catch (platformError, platformStacktrace) {
       print(
-        'Caught a platform exception in GoogleSignIn\n$platformError, $platformStacktrace'
-      );
+          'Caught a platform exception in GoogleSignIn\n$platformError, $platformStacktrace');
     }
   }
 
