@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "154846865193-nmvl72gp5n3f4i851nvk2idcjpfgn2s6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lirad.liradapp",
+            "certificate_hash": "153c5b322606e48b157142117b5042141ca94050"
+          }
+        },
+        {
           "client_id": "154846865193-p12s8sugi64bl637j2sc08u27k9u68v1.apps.googleusercontent.com",
           "client_type": 3
         }
