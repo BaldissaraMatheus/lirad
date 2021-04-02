@@ -1,12 +1,16 @@
-import 'package:instagram_media/instagram_media.dart';
-import '../config/keys.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class InstragramService {
-  InstagramMedia foo() {
-    return InstagramMedia(
-         mediaTypes: 0, //choose what to return (see parameters below)
-         appID: IG_KEY, //app ID for your IG app in your FB Developer Account
-         appSecret: IG_SECRET_KEY
-    );
+class InstagramService {
+  static Future<bool> redirect() async {
+    var url = 'https://www.instagram.com/liradufrj/';
+
+    if (await canLaunch(url)) {
+      return launch(
+        url,
+        universalLinksOnly: true,
+      );
+    } else {
+      throw 'There was a problem to open the url: $url';
+    }
   }
 }
