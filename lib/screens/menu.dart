@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/config/routes.dart';
 import 'package:frontend/models/lirad_user.dart';
+import 'package:frontend/models/route.dart';
 import 'package:provider/provider.dart';
 
 class Menu extends StatelessWidget {
@@ -26,43 +27,56 @@ class Menu extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text('Menu', style: TextStyle(color: Theme.of(context).primaryTextTheme.headline6.color),),
       ),
-      body: Center(
-        child: ListView.separated(
-          padding: EdgeInsets.only(left: 10, right: 10, top: 14, bottom: 0),
-          separatorBuilder: (BuildContext context, int index) => Divider(height: 15,),
-          itemCount: accessibleRoutes.length,
-          itemBuilder: (_, index) {
-            return this._createRaisedButton(context, accessibleRoutes[index].path, accessibleRoutes[index].desc);
-          },
-        )
+      body: Container(
+        margin: EdgeInsets.all(6),
+        child: Column(
+          children: [
+            Container(
+              height: 150,
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Column(
+                      children: [
+                        Flexible(child:_createRouteItem(context, Icons.list_alt, NamedRoutes.QUIZES, Row), flex: 1,),
+                        SizedBox(height: 6,),
+                        Flexible(child: _createRouteItem(context, Icons.calendar_today, NamedRoutes.CALENDAR, Row), flex: 1,),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 6,),
+                  Flexible(child: _createRouteItem(context, Icons.shuffle, NamedRoutes.RANDOM_QUIZES, Column), flex: 1,),
+                ],
+              )
+            ),
+            SizedBox(height: 6,),
+             _createRouteItem(context, Icons.play_arrow, NamedRoutes.VIDEOS, Row, 75),
+            SizedBox(height: 6,),
+            user.ligante == true
+              ? _createRouteItem(context, Icons.filter_frames_rounded, NamedRoutes.CERTIFICADOS, Row, 75)
+              : Container(),
+            user.ligante == true ? SizedBox(height: 6,) : Container(),
+            _createRouteItem(context, Icons.book, NamedRoutes.BLOG, Row, 75),
+            SizedBox(height: 6,),
+            _createRouteItem(context, Icons.logout, NamedRoutes.LOGOUT, Row, 75)
+          ],
+        ),
       ),
     );
   }
 
-  _createRaisedButton(BuildContext context, String route, String desc) {
-    var sizedBox = SizedBox(
-      height: 25,
-      width: double.infinity,
-      child: Align(
-        alignment: Alignment.center,
-        child: Text(desc, textAlign: TextAlign.center),
-      ) ,
-    );
-    var bgColor = Theme.of(context).primaryColor;
-    var textColor = Theme.of(context).primaryTextTheme.bodyText1.color;
-    return RaisedButton(
-      padding: EdgeInsets.all(12),
-      child: sizedBox,
-      color: bgColor,
-      textColor: textColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0),
-        side: BorderSide(color: bgColor)
-      ),
-      onPressed: () {
-        Navigator.of(context).pushNamed(route);
-      },
+  _createRouteItem(BuildContext context, IconData icon, LiradRoute route, Type orientation, [double height]) {
+    final children = [Icon(icon, color: Colors.white,), SizedBox(height: 6, width: 6,), Text(route.name, style: TextStyle(color: Colors.white),)];
+    final mainAxisAlignment =  MainAxisAlignment.center;
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pushNamed(route.path),
+      child: Container(
+        color: Theme.of(context).primaryColor,
+        height: height,
+        child: orientation == Column
+          ? Align(alignment: Alignment.center, child: Column(children: children, mainAxisAlignment: mainAxisAlignment,))
+          : Align(alignment: Alignment.center, child: Row(children: children, mainAxisAlignment: mainAxisAlignment,)),
+      ),      
     );
   }
-
 }

@@ -1,7 +1,7 @@
-class Route {
+class LiradRoute {
   final String path;
-  final String desc;
+  final String name;
   final bool restrictToLigante;
 
-  Route(this.path, this.desc, this.restrictToLigante);
+  LiradRoute(this.path, this.name, this.restrictToLigante);
 }
