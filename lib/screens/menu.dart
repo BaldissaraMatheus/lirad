@@ -3,6 +3,7 @@ import 'package:frontend/config/routes.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/models/route.dart';
 import 'package:provider/provider.dart';
+import 'package:frontend/config/palette.dart';
 
 class Menu extends StatelessWidget {
 
@@ -38,40 +39,45 @@ class Menu extends StatelessWidget {
                   Flexible(
                     child: Column(
                       children: [
-                        Flexible(child:_createRouteItem(context, Icons.list_alt, NamedRoutes.QUIZES, Row), flex: 1,),
+                        Flexible(child:_createRouteItem(context, Palette.black, Icons.list_alt, NamedRoutes.QUIZES, Row, true), flex: 1,),
                         SizedBox(height: 6,),
-                        Flexible(child: _createRouteItem(context, Icons.calendar_today, NamedRoutes.CALENDAR, Row), flex: 1,),
+                        Flexible(child: _createRouteItem(context, Palette.black, Icons.calendar_today, NamedRoutes.CALENDAR, Row, true), flex: 1,),
                       ],
                     ),
                   ),
                   SizedBox(width: 6,),
-                  Flexible(child: _createRouteItem(context, Icons.shuffle, NamedRoutes.RANDOM_QUIZES, Column), flex: 1,),
+                  Flexible(child: _createRouteItem(context, Palette.yellow, Icons.shuffle, NamedRoutes.RANDOM_QUIZES, Column, false), flex: 1,),
                 ],
               )
             ),
             SizedBox(height: 6,),
-             _createRouteItem(context, Icons.play_arrow, NamedRoutes.VIDEOS, Row, 75),
+             _createRouteItem(context, Palette.black, Icons.play_arrow, NamedRoutes.VIDEOS, Row, true, 75),
             SizedBox(height: 6,),
             user.ligante == true
-              ? _createRouteItem(context, Icons.filter_frames_rounded, NamedRoutes.CERTIFICADOS, Row, 75)
+              ? _createRouteItem(context, Palette.black, Icons.filter_frames_rounded, NamedRoutes.CERTIFICADOS, Row, true, 75)
               : Container(),
             user.ligante == true ? SizedBox(height: 6,) : Container(),
-            _createRouteItem(context, Icons.book, NamedRoutes.BLOG, Row, 75),
+            _createRouteItem(context, Palette.black, Icons.book, NamedRoutes.BLOG, Row, true, 75),
             SizedBox(height: 6,),
-            _createRouteItem(context, Icons.logout, NamedRoutes.LOGOUT, Row, 75)
+            _createRouteItem(context, Palette.darkBlue, Icons.logout, NamedRoutes.LOGOUT, Row, true, 75)
           ],
         ),
       ),
     );
   }
 
-  _createRouteItem(BuildContext context, IconData icon, LiradRoute route, Type orientation, [double height]) {
-    final children = [Icon(icon, color: Colors.white,), SizedBox(height: 6, width: 6,), Text(route.name, style: TextStyle(color: Colors.white),)];
+  _createRouteItem(BuildContext context, Color color, IconData icon, LiradRoute route, Type orientation, bool dark, [double height]) {
+    final textColor = dark ? Palette.white : Palette.black;
+    final children = [
+      Icon(icon, color: textColor,),
+      SizedBox(height: 6, width: 6,),
+      Text(route.name, style: TextStyle(color: textColor),)
+    ];
     final mainAxisAlignment =  MainAxisAlignment.center;
     return GestureDetector(
       onTap: () => Navigator.of(context).pushNamed(route.path),
       child: Container(
-        color: Theme.of(context).primaryColor,
+        color: color,
         height: height,
         child: orientation == Column
           ? Align(alignment: Alignment.center, child: Column(children: children, mainAxisAlignment: mainAxisAlignment,))

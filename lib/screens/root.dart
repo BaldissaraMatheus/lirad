@@ -8,8 +8,9 @@ import '../router_generator.dart';
 
 final theme = ThemeData(
   backgroundColor: Palette.white,
-  primaryColor: Palette.darkBlue,
+  primaryColor: Palette.black,
   accentColor: Palette.yellow,
+  buttonColor: Palette.darkBlue,
   primaryTextTheme: TextTheme(
     bodyText1: TextStyle(),
     bodyText2: TextStyle()
@@ -44,7 +45,7 @@ class _RootScreenState extends State<RootScreen> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Palette.darkBlue, //or set color with: Color(0xFF0000FF)
+      statusBarColor: Palette.black,
     ));
     final getRoute = (user) => user.email == null ? '/login' : '/';
     return ChangeNotifierProvider(

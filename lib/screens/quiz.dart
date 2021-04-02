@@ -86,8 +86,8 @@ class _QuizScreenState extends State<QuizScreen> {
           ),
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            unselectedItemColor: Theme.of(context).primaryColor.withOpacity(this._isQuizIndexLast() ? 0.5 : 1),
-            selectedItemColor: Theme.of(context).primaryColor.withOpacity(this._isQuizIndexFirst() ? 0.5 : 1),
+            unselectedItemColor: Theme.of(context).buttonColor.withOpacity(this._isQuizIndexLast() ? 0.5 : 1),
+            selectedItemColor: Theme.of(context).buttonColor.withOpacity(this._isQuizIndexFirst() ? 0.5 : 1),
             unselectedFontSize: 14,
             selectedFontSize: 14,
             items: [
@@ -148,7 +148,7 @@ class _QuizScreenState extends State<QuizScreen> {
     var maxWidthChild = this._getMaxWidthChild(text);
     var isThisOptionSelected = index != null && index == this.selectedOptionIndex;
     var color = !isThisOptionSelected
-      ? Theme.of(context).primaryColor
+      ? Theme.of(context).buttonColor
       : Theme.of(context).accentColor;
     var textColor = !isThisOptionSelected
       ? Theme.of(context).primaryTextTheme.bodyText1.color
