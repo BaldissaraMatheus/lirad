@@ -15,26 +15,23 @@ class LogoutScreen extends StatelessWidget {
             children: <Widget>[
               Text('Tem certeza que deseja sair?', style: TextStyle(fontSize: 18),),
               Container(
-                padding: EdgeInsets.fromLTRB(100, 20, 100, 0),
+                margin: EdgeInsets.only(top: 12),
+                width: 200,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(children: [
-                      RaisedButton(
-                        child: Text('Confirmar'),
-                        color: Theme.of(context).primaryColor,
-                        textColor: Theme.of(context).primaryTextTheme.bodyText1.color,
-                        onPressed: () => authService.signOut(context)
-                      ),
-                    ]),
-                    Column(children: [
-                      RaisedButton(
-                        child: Text('Cancelar'),
-                        color: Theme.of(context).primaryColor,
-                        textColor: Theme.of(context).primaryTextTheme.bodyText1.color,
-                        onPressed: () => Navigator.of(context).popAndPushNamed('/')
-                      ),
-                    ]),
+                    RaisedButton(
+                      child: Text('Confirmar'),
+                      color: Theme.of(context).primaryColor,
+                      textColor: Theme.of(context).primaryTextTheme.bodyText1.color,
+                      onPressed: () => authService.signOut(context)
+                    ),
+                    RaisedButton(
+                      child: Text('Cancelar'),
+                      color: Theme.of(context).primaryColor,
+                      textColor: Theme.of(context).primaryTextTheme.bodyText1.color,
+                      onPressed: () => Navigator.of(context).popAndPushNamed('/')
+                    ),
                   ]
                 )
               )

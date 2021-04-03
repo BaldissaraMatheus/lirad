@@ -7,7 +7,7 @@ class NamedRoutes {
   static var QUIZES_QUIZ = LiradRoute('/quizes/quiz', 'quiz', false);
   static var VIDEOS = LiradRoute('/videos', 'Vídeos', false);
   static var CERTIFICADOS = LiradRoute('/certificates', 'Certificados', true);
-  static var CALENDAR = LiradRoute('/activities', 'Calendário/Atividades', false);
+  static var CALENDAR = LiradRoute('/activities', 'Calendário', false);
   static var BLOG = LiradRoute('/blog', 'Instagram', false);
   static var RANDOM_QUIZES = LiradRoute('/quizes/random', 'Questões', false);
 }

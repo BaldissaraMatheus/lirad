@@ -10,18 +10,6 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LiradUser user = Provider.of<LiradUser>(context, listen: false);
-    var routes = [
-      NamedRoutes.QUIZES,
-      NamedRoutes.RANDOM_QUIZES,
-      NamedRoutes.CALENDAR,
-      NamedRoutes.CERTIFICADOS,
-      NamedRoutes.BLOG,
-      NamedRoutes.VIDEOS,
-      NamedRoutes.LOGOUT,
-    ];
-    var accessibleRoutes = user.ligante == true
-      ? routes
-      : routes.where((route) => route.restrictToLigante == false).toList();
 
     return Scaffold(
       appBar: AppBar(
