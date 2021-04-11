@@ -471,6 +471,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  rainbow_color:
+    dependency: "direct main"
+    description:
+      name: rainbow_color
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
+  rainbow_vis:
+    dependency: transitive
+    description:
+      name: rainbow_vis
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   rxdart:
     dependency: "direct main"
     description:
@@ -666,7 +680,7 @@ packages:
     source: hosted
     version: "0.1.2"
   xml:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: xml
       url: "https://pub.dartlang.org"
@@ -694,5 +708,5 @@ packages:
     source: hosted
     version: "6.1.1"
 sdks:
-  dart: ">=2.12.0-0.0 <3.0.0"
+  dart: ">=2.12.0 <3.0.0"
   flutter: ">=1.22.0"
