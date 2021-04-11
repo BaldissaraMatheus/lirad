@@ -91,7 +91,7 @@ class Menu extends StatelessWidget {
   }
 
   Function _openSobreDialog(BuildContext context) {    
-    final credits = 'Aplicativo foi desenvolvido em conjunto por Vitor Siqueira, Cleiton Magno, '
+    final credits = 'Aplicativo foi desenvolvido em conjunto por Vitor Lobo, Cleiton Magno, '
       + 'Bianca Vivarini, Rodolfo L. Carneiro e Matheus Baldissara.';    
     final defaultTextStyle = TextStyle(color: Colors.black);
     final icons = [
