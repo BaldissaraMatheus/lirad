@@ -41,8 +41,8 @@ class Menu extends StatelessWidget {
             SizedBox(height: 6,),
              _createRouteItem(context, Palette.black, Icons.play_arrow, NamedRoutes.VIDEOS, Row, true, 75),
             SizedBox(height: 6,),
-            user.ligante == true
-              ? _createRouteItem(context, Palette.black, Icons.filter_frames_rounded, NamedRoutes.CERTIFICADOS, Row, true, 75)
+            [user.ligante, user.extensionista, user.praticas].contains(true)
+              ? _createMenuItem(context, Palette.black, Icons.filter_frames_rounded, NamedRoutes.CERTIFICADOS, Row, true, 75)
               : Container(),
             user.ligante == true ? SizedBox(height: 6,) : Container(),
             _createRouteItem(context, Palette.black, Icons.book, NamedRoutes.BLOG, Row, true, 75),
