@@ -87,16 +87,23 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   _updateEvents() async {
     Map<DateTime, List<dynamic>> events = {};
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('eventos').get();
-    var docs = qn.docs;
-    if (!user.praticas) {
-      docs = docs.where((doc) => doc['pratica'] == false).toList();
+    var docs = qn.docs
+      .where((doc) => doc['pratica'] == false)
+      .where((doc) => doc['ligantes'] == false)
+      .where((doc) => doc['extensionistas'] == false)
+      .toList();
+    if (user.praticas) {
+      docs = [...docs, ...qn.docs.where((doc) => doc['pratica'] == true).toList()];
     }
-    if (!user.ligante) {
-      docs = docs.where((doc) => doc['restrictToLigantes'] == false).toList();
+    if (user.ligante) {
+      docs = [...docs, ...qn.docs.where((doc) => doc['ligantes'] == true).toList()];
     }
-    if (!user.extensionista) {
-      docs = docs.where((doc) => doc['restrictToExtensionistas'] == false).toList();
+    if (user.extensionista) {
+      docs = [...docs, ...qn.docs.where((doc) => doc['extensionistas'] == true).toList()];
     }
+    final uniqueUids = docs.map((doc) => doc.id).toSet().toList();
+    docs = uniqueUids.map((id) => docs.firstWhere((doc) => doc.id == id)).toList();
+
     docs.forEach((doc) {
       var date = DateTime.parse((doc['date'] as Timestamp).toDate().toIso8601String().substring(0, 10));
       if (!events.keys.contains(date)) {

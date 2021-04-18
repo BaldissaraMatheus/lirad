@@ -69,10 +69,10 @@ class LiradUser extends ChangeNotifier {
      this._fm.subscribeToTopic('ligantes');
     }
     if (this.extensionista) {
-     this._fm.subscribeToTopic('extensão');
+     this._fm.subscribeToTopic('extensionistas');
     }
     if (this.praticas) {
-     this._fm.subscribeToTopic('pratica');
+     this._fm.subscribeToTopic('praticas');
     }
   }
 }
