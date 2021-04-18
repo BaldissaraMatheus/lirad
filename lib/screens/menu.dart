@@ -99,7 +99,7 @@ class Menu extends StatelessWidget {
       + 'Bianca Vivarini, Rodolfo L. Carneiro e Matheus Baldissara.';    
     final defaultTextStyle = TextStyle(color: Colors.black);
     final icons = [
-      TextSpan(text: '\n \nOs ícones utilizados na tela de simulados foram baixados da endereço ', style: defaultTextStyle),
+      TextSpan(text: '\n \nOs ícones utilizados na tela de simulados foram baixados do endereço ', style: defaultTextStyle),
       TextSpan(text: 'https://icons8.com/', style: new TextStyle(color: Colors.blue), recognizer: new TapGestureRecognizer()
         ..onTap = () {
           launch('https://icons8.com/');
@@ -107,6 +107,12 @@ class Menu extends StatelessWidget {
       ),
       TextSpan(text: '.')
     ];
+    final contribute = '\n \nVocê pode ver o código fonte e contribuir para o aplicativo no nosso ';
+    final repo = TextSpan(text: 'repositório público.', style: new TextStyle(color: Colors.blue), recognizer: new TapGestureRecognizer()
+        ..onTap = () {
+          launch('https://github.com/BaldissaraMatheus/lirad');
+        },
+    );
     final thankYou = '\n \n Obrigado por baixar o app!';    
     return () => showDialog(
       context: context,
@@ -118,6 +124,8 @@ class Menu extends StatelessWidget {
             children: [
               RichText(text: TextSpan(children: [
                 TextSpan(text: credits, style: defaultTextStyle),
+                TextSpan(text: contribute, style: defaultTextStyle),
+                repo,
                 ...icons,
                 TextSpan(text: thankYou, style: defaultTextStyle),
               ])),
