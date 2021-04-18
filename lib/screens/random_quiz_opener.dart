@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/quiz.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
+import 'package:frontend/widgets/help_icon_btn.dart';
 
 class RandomQuizOpener extends StatefulWidget {
   @override
@@ -22,6 +23,9 @@ class _RandomQuizOpenerState extends State<RandomQuizOpener> {
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text("Lista de Questões"),
+        actions: [
+          HelpIconBtn()
+        ],
       ),
       body: Container(
         width: double.infinity,

@@ -7,6 +7,7 @@ import 'package:frontend/models/quiz.dart';
 import 'package:frontend/models/simulado.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
 import 'package:frontend/services/auth.dart';
+import 'package:frontend/widgets/help_icon_btn.dart';
 import 'package:provider/provider.dart';
 
 class QuizList extends StatefulWidget {
@@ -51,6 +52,9 @@ class _QuisListState extends State<QuizList> {
         leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
           Navigator.pushReplacementNamed(context, '/');
         }),
+        actions: [
+          HelpIconBtn()
+        ],
       ),
       body: Container(
         width: double.infinity,

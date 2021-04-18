@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/services/storage.dart';
 import 'package:frontend/services/localNotification.dart';
+import 'package:frontend/widgets/help_icon_btn.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -42,6 +43,9 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text('Certificados'),
+        actions: [
+          HelpIconBtn()
+        ],
       ),
       body: _certificates != null
         ? ListView(children: _certificates.map((certificate) => _buildCertificateCard(certificate)).toList())

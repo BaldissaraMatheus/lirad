@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/lirad_user.dart';
+import 'package:frontend/widgets/help_icon_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -38,6 +39,9 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text('Calendário de Atividades'),
+        actions: [
+          HelpIconBtn()
+        ],
       ),
       body: ListView(children: [
         TableCalendar(

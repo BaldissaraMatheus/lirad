@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/config/routes.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/models/route.dart';
+import 'package:frontend/widgets/help_icon_btn.dart';
 import 'package:frontend/widgets/rainbow_heart.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/config/palette.dart';
@@ -19,6 +20,9 @@ class Menu extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Menu', style: TextStyle(color: Theme.of(context).primaryTextTheme.headline6.color),),
+        actions: [
+          HelpIconBtn()
+        ],
       ),
       body: Container(
         margin: EdgeInsets.all(6),

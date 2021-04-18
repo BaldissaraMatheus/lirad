@@ -5,6 +5,7 @@ import 'package:frontend/models/quiz.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
 import 'package:frontend/services/auth.dart';
 import 'package:frontend/services/storage.dart';
+import 'package:frontend/widgets/help_icon_btn.dart';
 import 'package:provider/provider.dart';
 import 'package:styled_text/styled_text.dart';
 
@@ -53,7 +54,8 @@ class _QuizScreenState extends State<QuizScreen> {
                 icon: Icon(isQuestionFavorite ? Icons.favorite : Icons.favorite_outline),
                 onPressed: () {
                   setFavorite(!this.isQuestionFavorite); 
-                })
+                }),
+              HelpIconBtn()
             ],
             leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
               Navigator.pushReplacementNamed(context, widget.initialRoute);

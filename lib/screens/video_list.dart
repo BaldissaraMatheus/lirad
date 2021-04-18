@@ -3,6 +3,7 @@ import 'package:frontend/models/channel.dart';
 import 'package:frontend/models/video.dart';
 import 'package:frontend/screens/video.dart';
 import 'package:frontend/services/youtube.dart';
+import 'package:frontend/widgets/help_icon_btn.dart';
 
 class VideoListScreen extends StatefulWidget {
   @override
@@ -35,6 +36,9 @@ class _VideoListScreenState extends State<VideoListScreen> {
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text('Lista de vídeos'),
+        actions: [
+          HelpIconBtn()
+        ],
       ),
       body: _channel != null
         ? NotificationListener<ScrollNotification>(
