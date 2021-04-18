@@ -5,6 +5,7 @@ import 'package:frontend/models/filter.dart';
 import 'package:frontend/models/lirad_user.dart';
 import 'package:frontend/models/quiz.dart';
 import 'package:frontend/models/simulado.dart';
+import 'package:frontend/models/tag.dart';
 import 'package:frontend/screens_arguments/quiz_screen_arguments.dart';
 import 'package:frontend/services/auth.dart';
 import 'package:frontend/widgets/help_icon_btn.dart';
@@ -22,6 +23,7 @@ class _QuisListState extends State<QuizList> {
   Future<List<dynamic>> futureItemsList;
   List<dynamic> itemsList;
   List<Quiz> quizList;
+  List<Tag> tagsList;
   List<Simulado> simuladosList;
   List<Quiz> favorites = [];
   List<Filter> filters = [
@@ -31,7 +33,7 @@ class _QuisListState extends State<QuizList> {
   String selectedFilter = 'Simulados';
   bool loadRandomOrder = false;
   LiradUser user;
-  String initialRoute = '/quizes';
+  String initialRoute = '/quizes';  
 
   @override
   void initState() {
@@ -82,14 +84,14 @@ class _QuisListState extends State<QuizList> {
                               items: this.filters.map((filter) => this._createDropdownMenuItemFromFilter(filter)).toList(),
                               onChanged: (item) => {
                                 this._updateSelectedFilter(item),
-                                if (item.contains('Questões sobre ')) {
-                                  this._updateList(
-                                    this.filters.where((filter) => filter.key == item).map((filter) => filter.quizes).toList()[0]
-                                  )
-                                } else if (item == 'Simulados') {
+                                if (item == 'Simulados') {
                                   this._updateList(this.simuladosList)
                                 } else if (item == 'Questões favoritas') {
                                   this._updateList(this.favorites)
+                                } else {
+                                  this._updateList(
+                                    this.filters.where((filter) => filter.key == item).map((filter) => filter.quizes).toList()[0]
+                                  )
                                 }
                               },
                             ),
@@ -147,19 +149,17 @@ class _QuisListState extends State<QuizList> {
 
   Future<List<dynamic>> getItems() async {
     QuerySnapshot qn = await FirebaseFirestore.instance.collection('quizes').get();
+    QuerySnapshot tags = await FirebaseFirestore.instance.collection('tags').get();
     var quizList = qn.docs.map((doc) => Quiz.fromMap(doc.data())).toList();
+    var tagsList = tags.docs.map((doc) => Tag.fromMap(doc.data())).toList();
     this.quizList = quizList;
+    this.tagsList = tagsList;
     this.simuladosList = await this.getSimulados();
-    var tags = quizList
-      .map((quiz) => quiz.tags)
-      .expand((tag) => tag)
-      .map((tag) => tag)
-      .toSet()
-      .toList();
-    var filters = tags
+    var filters = tagsList
       .map((tag) => Filter(
-        'Questões sobre ' + tag,
-        this.quizList.where((quiz) => quiz.tags.contains(tag)).toList()
+        tag.name,
+        this.quizList.where((quiz) => quiz.tags.contains(tag.name)).toList(),
+        tag.icon,
       ));
     this.filters.addAll(filters);
     this.itemsList = this.simuladosList;
@@ -173,11 +173,7 @@ class _QuisListState extends State<QuizList> {
 
   DropdownMenuItem<String> _createDropdownMenuItemFromFilter(Filter filter) {
     List<Widget> rowChildren = [];
-    if (filter.icon != null) {
-      rowChildren.add(filter.icon);
-    } else {
-      rowChildren.add(Icon(Icons.subject));
-    }
+    rowChildren.add(filter.icon);
     rowChildren.add(SizedBox(width: 10,),);
     rowChildren.add(Text(filter.key));
     return DropdownMenuItem(

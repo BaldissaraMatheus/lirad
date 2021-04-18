@@ -6,5 +6,5 @@ class Filter {
   final List<Quiz> quizes;
   Icon icon;
 
-  Filter(this.key, this.quizes, [this.icon]);
+  Filter(this.key, this.quizes, this.icon);
 }
