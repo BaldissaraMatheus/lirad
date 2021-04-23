@@ -160,7 +160,9 @@ class _QuisListState extends State<QuizList> {
         tag.name,
         this.quizList.where((quiz) => quiz.tags.contains(tag.name)).toList(),
         tag.icon,
-      ));
+      ))
+      .toList();
+    filters.sort((filterA, filterB) => filterA.key.toLowerCase().compareTo(filterB.key.toLowerCase()));
     this.filters.addAll(filters);
     this.itemsList = this.simuladosList;
     return this.itemsList;
