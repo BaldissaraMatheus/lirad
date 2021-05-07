@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/services/auth.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -20,25 +21,16 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset('assets/images/logo-only-text.png', height: 250, width: 300,),
-              LoginButton(),
+              Container(
+                width: 300,
+                child: Column(children: [
+                  SignInButton(Buttons.GoogleDark, onPressed: () => authService.googleSignIn(context)),
+                  SignInButton(Buttons.AppleDark, onPressed: () => null)
+              ]),)
             ],
           )
         )
       )
-    );
-  }
-}
-
-class LoginButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: () => { 
-        authService.googleSignIn(context),
-      },
-      color: Theme.of(context).accentColor,
-      textColor: Theme.of(context).accentTextTheme.bodyText1.color,
-      child: Text('Entrar com o Google'),
     );
   }
 }
