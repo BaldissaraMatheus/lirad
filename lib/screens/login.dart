@@ -25,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: 300,
                 child: Column(children: [
                   SignInButton(Buttons.GoogleDark, onPressed: () => authService.googleSignIn(context)),
-                  SignInButton(Buttons.AppleDark, onPressed: () => null)
               ]),)
             ],
           )
